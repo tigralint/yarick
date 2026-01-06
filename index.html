@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SENSES | Искусство приватных встреч</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Manrope:wght@200;300;400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+</head>
+<body>
+
+    <div class="cursor-outer"></div>
+    <div class="cursor-inner"></div>
+
+    <svg class="noise-filter">
+        <filter id="noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"></feTurbulence>
+            <feColorMatrix type="saturate" values="0"></feColorMatrix>
+        </filter>
+    </svg>
+    <div class="noise-overlay"></div>
+
+    <div class="loader">
+        <div class="loader-wrapper">
+            <span class="loader-text">SENSES</span>
+            <div class="loader-progress"></div>
+        </div>
+        <div class="loader-curtain"></div>
+    </div>
+
+    <header class="header">
+        <div class="container header-inner">
+            <a href="#" class="logo" data-cursor="-hover">SENSES</a>
+            
+            <nav class="nav-desktop">
+                <a href="#concept" class="nav-link" data-cursor="-hover"><span class="nav-text">Философия</span></a>
+                <a href="#scenarios" class="nav-link" data-cursor="-hover"><span class="nav-text">Коллекция</span></a>
+                <a href="#tariffs" class="nav-link" data-cursor="-hover"><span class="nav-text">Тарифы</span></a>
+            </nav>
+
+            <div class="header-right">
+                <a href="#contacts" class="btn-text" data-cursor="-hover">Бронирование</a>
+                <div class="burger-trigger" data-cursor="-hover">
+                    <span class="line"></span>
+                    <span class="line"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu">
+        <div class="mobile-menu-links">
+            <a href="#concept" class="m-link">Философия</a>
+            <a href="#scenarios" class="m-link">Коллекция</a>
+            <a href="#tariffs" class="m-link">Тарифы</a>
+            <a href="#contacts" class="m-link accent">Связаться</a>
+        </div>
+    </div>
+
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+
+            <section class="hero">
+                <div class="hero-bg">
+                    <img src="assets/hero.jpg" alt="Atmosphere" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="hero-overlay"></div>
+                </div>
+
+                <div class="container hero-container">
+                    <div class="hero-content">
+                        <div class="hero-label reveal-text">Private Experience</div>
+                        <h1 class="hero-title">
+                            <div class="line-wrapper"><span class="line-reveal">Искусство</span></div>
+                            <div class="line-wrapper"><span class="line-reveal italic">сокровенных</span></div>
+                            <div class="line-wrapper"><span class="line-reveal">моментов</span></div>
+                        </h1>
+                        <p class="hero-desc reveal-text">
+                            Сервис организации свиданий «под ключ». <br>
+                            Мы создаем атмосферу, пока вы проживаете чувства.
+                        </p>
+                        <div class="hero-action reveal-text">
+                            <a href="#scenarios" class="circle-btn" data-cursor="-magnetic">
+                                <span>Explore</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M19 12l-7 7-7-7" stroke-width="1.5"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="marquee-section">
+                <div class="marquee-track">
+                    <span>Atmosphere • Intimacy • Passion • Secrecy • Emotions • </span>
+                    <span>Atmosphere • Intimacy • Passion • Secrecy • Emotions • </span>
+                    <span>Atmosphere • Intimacy • Passion • Secrecy • Emotions • </span>
+                </div>
+            </div>
+
+            <section id="concept" class="concept-section">
+                <div class="container">
+                    <div class="concept-grid">
+                        <div class="concept-text" data-speed="0.9">
+                            <span class="section-label">Концепция</span>
+                            <h2 class="section-title">Больше, чем <br> <span class="italic">просто место</span></h2>
+                            <p class="text-body">
+                                Мы не сдаем квартиры. Мы режиссируем ваши впечатления.
+                                Представьте, что вы герои фильма, где декорации, свет и звук 
+                                подобраны идеально.
+                            </p>
+                            <ul class="concept-list">
+                                <li>
+                                    <span class="num">01</span>
+                                    <span class="val">Инкогнито</span>
+                                    <p class="sub">Никаких встреч с персоналом. Только код доступа.</p>
+                                </li>
+                                <li>
+                                    <span class="num">02</span>
+                                    <span class="val">Детали</span>
+                                    <p class="sub">Ароматы, премиальный текстиль, живой огонь.</p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="concept-image-wrapper" data-speed="1.1">
+                            <div class="reveal-image">
+                                <img src="assets/concept.jpg" alt="Atmosphere">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="scenarios" class="scenarios-section">
+                <div class="container header-container">
+                    <h2 class="section-title text-center">Коллекция <span class="italic">Сюжетов</span></h2>
+                </div>
+                
+                <div class="horizontal-scroll-wrapper">
+                    <div class="horizontal-track">
+                        
+                        <div class="scenario-card">
+                            <div class="card-bg">
+                                <img src="assets/chill.jpg" alt="Chill">
+                            </div>
+                            <div class="card-content">
+                                <span class="card-num">01</span>
+                                <h3 class="card-title">Chill & Relax</h3>
+                                <p class="card-desc">Глубина тишины. Ужин при свечах, джаз на виниле и полное отсутствие внешнего мира.</p>
+                                <a href="#contacts" class="card-btn" data-cursor="-hover">Выбрать</a>
+                            </div>
+                        </div>
+
+                        <div class="scenario-card">
+                            <div class="card-bg">
+                                <img src="assets/party.jpg" alt="Party">
+                            </div>
+                            <div class="card-content">
+                                <span class="card-num">02</span>
+                                <h3 class="card-title">Private Party</h3>
+                                <p class="card-desc">Энергия ночи. Коктейльный бар, дымный кальян и плейлист, который заставляет двигаться.</p>
+                                <a href="#contacts" class="card-btn" data-cursor="-hover">Выбрать</a>
+                            </div>
+                        </div>
+
+                        <div class="scenario-card">
+                            <div class="card-bg">
+                                <img src="assets/spicy.jpg" alt="Passion">
+                            </div>
+                            <div class="card-content">
+                                <span class="card-num">03</span>
+                                <h3 class="card-title">Spicy Games</h3>
+                                <p class="card-desc">Грани дозволенного. Сенсорная депривация, сценарий для двоих и абсолютная свобода.</p>
+                                <a href="#contacts" class="card-btn" data-cursor="-hover">Выбрать</a>
+                            </div>
+                        </div>
+
+                        <div class="scenario-card final-card">
+                            <div class="card-content center">
+                                <h3 class="card-title">VIP Request</h3>
+                                <p class="card-desc">Ваша фантазия — наша реализация.</p>
+                                <a href="#contacts" class="btn-primary" data-cursor="-hover">Индивидуально</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <section id="tariffs" class="tariffs-section">
+                <div class="container">
+                    <div class="section-header-row">
+                        <span class="section-label">Инвестиции в эмоции</span>
+                        <h2 class="section-title">Тарифы</h2>
+                    </div>
+
+                    <div class="tariffs-grid">
+                        <div class="tariff-item">
+                            <div class="t-head">
+                                <h3>Light</h3>
+                                <span class="price">5.000 ₽</span>
+                            </div>
+                            <ul class="t-features">
+                                <li>3-4 часа аренды</li>
+                                <li>Легкий сет закусок</li>
+                                <li>Романтический декор</li>
+                                <li>Базовый сценарий</li>
+                            </ul>
+                            <a href="#contacts" class="t-link" data-cursor="-hover">Забронировать</a>
+                        </div>
+
+                        <div class="tariff-item featured">
+                            <div class="t-bg"></div>
+                            <div class="t-head">
+                                <h3>Gold</h3>
+                                <span class="price">12.000 ₽</span>
+                            </div>
+                            <ul class="t-features">
+                                <li>Ночь в апартаментах</li>
+                                <li>Ужин из ресторана</li>
+                                <li>Вино / Шампанское</li>
+                                <li>Игровой набор</li>
+                            </ul>
+                            <a href="#contacts" class="btn-primary full" data-cursor="-magnetic">Выбор гостей</a>
+                        </div>
+
+                        <div class="tariff-item">
+                            <div class="t-head">
+                                <h3>Exclusive</h3>
+                                <span class="price">Individual</span>
+                            </div>
+                            <ul class="t-features">
+                                <li>Премиум локация</li>
+                                <li>Трансфер Maybach</li>
+                                <li>Живые цветы / Музыканты</li>
+                                <li>Персональный менеджер</li>
+                            </ul>
+                            <a href="#contacts" class="t-link" data-cursor="-hover">Обсудить</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contacts" class="contact-section">
+                <div class="container">
+                    <div class="contact-wrapper">
+                        <div class="contact-text">
+                            <h2 class="section-title">Начните <br> <span class="italic">историю</span></h2>
+                            <p>Оставьте заявку. Мы свяжемся в мессенджере (WhatsApp/Telegram), сохраняя полную конфиденциальность.</p>
+                            
+                            <div class="socials-row">
+                                <a href="#" class="soc-link" data-cursor="-hover">Telegram</a>
+                                <a href="#" class="soc-link" data-cursor="-hover">WhatsApp</a>
+                            </div>
+                        </div>
+
+                        <form class="booking-form">
+                            <div class="input-group">
+                                <input type="text" id="name" placeholder=" " required>
+                                <label for="name">Ваше имя</label>
+                            </div>
+                            <div class="input-group">
+                                <input type="tel" id="phone" placeholder=" " required>
+                                <label for="phone">Телефон / Никнейм</label>
+                            </div>
+                            <div class="input-group">
+                                <select id="type">
+                                    <option value="" disabled selected>Желаемый сценарий</option>
+                                    <option value="chill">Chill & Relax</option>
+                                    <option value="party">Private Party</option>
+                                    <option value="spicy">Spicy Games</option>
+                                    <option value="vip">Exclusive</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-submit" data-cursor="-magnetic">
+                                <span>Отправить заявку</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="footer">
+                <div class="container footer-inner">
+                    <div class="footer-col">
+                        <a href="#" class="logo-sm">SENSES</a>
+                        <p class="copyright">© 2026 SENSES. <br>All rights reserved.</p>
+                    </div>
+                    <div class="footer-col right">
+                        <a href="#">Политика конфиденциальности</a>
+                        <a href="#">Договор оферты</a>
+                    </div>
+                </div>
+            </footer>
+
+        </div> </main>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
