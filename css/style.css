@@ -6,7 +6,7 @@
     --text-main: #EAEAEA;
     --text-muted: #999999;
     --accent: #D4AF37; /* Noble Gold */
-    --accent-glow: rgba(212, 175, 55, 0.15);
+    --accent-glow: rgba(212, 175, 55, 0.12);
     
     --glass-bg: rgba(20, 20, 20, 0.4);
     --glass-border: rgba(255, 255, 255, 0.08);
@@ -25,7 +25,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    cursor: none;
+    cursor: none; /* Скрываем системный курсор */
 }
 
 html.lenis { height: auto; }
@@ -92,41 +92,25 @@ h1, h2, h3, h4 {
 }
 
 /* =========================================
-   3. ANIMATED NOISE & GLOWS
+   3. AMBIENT GLOWS (Живой фон)
    ========================================= */
-.noise-overlay {
-    position: fixed;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9000;
-    animation: noise-move 0.5s infinite linear;
-    opacity: 0.06;
-}
-
-@keyframes noise-move {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(5%, 5%); }
-}
-
 .ambient-glow {
     position: fixed;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
     border-radius: 50%;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.4;
+    opacity: 0.5;
     filter: blur(80px);
     animation: glow-float 20s infinite alternate ease-in-out;
 }
-.glow-1 { top: -10%; left: -10%; animation-delay: 0s; }
-.glow-2 { bottom: -10%; right: -10%; animation-delay: -10s; background: radial-gradient(circle, rgba(100, 50, 255, 0.08) 0%, transparent 70%); }
+.glow-1 { top: -20%; left: -10%; animation-delay: 0s; }
+.glow-2 { bottom: -20%; right: -10%; animation-delay: -5s; background: radial-gradient(circle, rgba(100, 50, 255, 0.05) 0%, transparent 60%); }
 
 @keyframes glow-float {
     0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(100px, 50px) scale(1.2); }
+    100% { transform: translate(50px, 30px) scale(1.1); }
 }
 
 /* =========================================
@@ -138,6 +122,7 @@ h1, h2, h3, h4 {
     border-radius: 50%; pointer-events: none; z-index: 9999;
     transform: translate(-50%, -50%);
     mix-blend-mode: difference;
+    transition: width 0.3s, height 0.3s, background-color 0.3s;
 }
 .cursor-inner {
     position: fixed; top: 0; left: 0; width: 6px; height: 6px;
@@ -212,9 +197,8 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .hero-bg img { width: 100%; height: 100%; object-fit: cover; }
 .hero-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.8));
-    background-color: rgba(5, 5, 5, 0.6);
-    z-index: 2; backdrop-filter: blur(3px);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(5,5,5,1));
+    z-index: 2;
 }
 .hero-container { position: relative; z-index: 3; text-align: center; }
 .hero-content { max-width: 900px; margin: 0 auto; }
@@ -270,49 +254,45 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .concept-image-wrapper:hover img { filter: grayscale(0%); }
 
 /* =========================================
-   9. SCENARIOS (FIXED FOR ALL DEVICES)
+   9. SCENARIOS (Карточки с видимым текстом)
    ========================================= */
-.scenarios-section { padding: 100px 0; background-color: #080808; overflow: hidden; }
+.scenarios-section { padding: 100px 0; background-color: #080808; overflow: hidden; position: relative; z-index: 2; }
 .horizontal-scroll-wrapper { width: 100%; height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; }
-.horizontal-track { display: flex; gap: 60px; padding-left: 10vw; padding-right: 10vw; width: max-content; }
+.horizontal-track { display: flex; gap: 40px; padding-left: 10vw; padding-right: 10vw; width: max-content; }
 
 .scenario-card {
-    width: 450px; height: 65vh; position: relative; flex-shrink: 0;
-    overflow: hidden; border-radius: 4px; background-color: #050505;
+    width: 400px; height: 600px; position: relative; flex-shrink: 0;
+    overflow: hidden; border-radius: 4px; background-color: #000;
     border: 1px solid var(--glass-border);
 }
-
+.card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 .scenario-card .card-bg img {
     width: 100%; height: 100%; object-fit: cover;
-    filter: grayscale(100%) blur(2px) brightness(0.7); /* По умолчанию темнее и ч/б */
-    transform: scale(1.05);
-    transition: all 0.6s var(--ease-out);
+    filter: brightness(0.65); /* Затемнение */
+    transition: transform 0.6s ease, filter 0.6s ease;
 }
+.scenario-card:hover .card-bg img { transform: scale(1.05); filter: brightness(0.5); }
 
-.scenario-card:hover .card-bg img {
-    filter: grayscale(0%) blur(0px) brightness(1);
-    transform: scale(1);
-}
-
-/* FIX: Делаем градиент сильнее, чтобы текст читался всегда */
+/* Контент поверх картинки */
 .card-content {
-    position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 40px;
-    background: linear-gradient(to top, #000 0%, rgba(0,0,0,0.8) 40%, transparent 100%);
+    position: absolute; bottom: 0; left: 0; width: 100%; z-index: 10;
+    padding: 30px; display: flex; flex-direction: column; justify-content: flex-end;
+    /* Усиленный градиент */
+    background: linear-gradient(to top, #000 0%, rgba(0,0,0,0.85) 40%, transparent 100%);
 }
-.card-content.center { justify-content: center; align-items: center; text-align: center; background: none; }
-.card-num { font-family: var(--font-display); font-size: 3rem; color: rgba(255,255,255,0.2); position: absolute; top: 20px; right: 20px; }
-.card-title { font-size: 2rem; margin-bottom: 10px; color: #fff; }
+.card-content.center { height: 100%; justify-content: center; align-items: center; text-align: center; background: rgba(0,0,0,0.6); }
 
-/* FIX: Текст теперь виден всегда, просто становится чуть ярче при наведении */
-.card-desc {
-    color: #ccc; font-size: 0.95rem; margin-bottom: 20px;
-    opacity: 0.8; 
-    transform: translateY(0); 
-    transition: 0.4s ease;
+.card-num { font-family: var(--font-display); font-size: 4rem; color: rgba(255,255,255,0.1); position: absolute; top: 20px; right: 20px; z-index: 5; }
+.card-title { font-size: 2rem; margin-bottom: 10px; color: #fff; z-index: 11; }
+.card-desc { 
+    color: #e0e0e0; font-size: 1rem; margin-bottom: 20px; 
+    opacity: 1; z-index: 11; display: block; line-height: 1.5;
 }
-.scenario-card:hover .card-desc { opacity: 1; color: #fff; }
-
-.card-btn { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--accent); padding-bottom: 5px; color: var(--accent); }
+.card-btn { 
+    font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; 
+    border-bottom: 1px solid var(--accent); padding-bottom: 5px; color: var(--accent); 
+    display: inline-block; width: fit-content; z-index: 11;
+}
 
 /* =========================================
    10. TARIFFS
@@ -367,7 +347,7 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .btn-submit:hover { background: var(--accent); color: #000; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
 
 /* =========================================
-   12. FOOTER
+   12. FOOTER (GIANT)
    ========================================= */
 .footer { padding: 80px 0 20px 0; border-top: 1px solid var(--glass-border); position: relative; overflow: hidden; }
 .footer-inner { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px; }
@@ -389,18 +369,15 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     .concept-grid { grid-template-columns: 1fr; }
     .concept-image-wrapper { height: 400px; order: -1; }
     
-    /* FIX: SCENARIO CARDS ON MOBILE */
     .horizontal-scroll-wrapper {
         height: auto; display: block; overflow-x: auto;
-        padding-bottom: 40px; -webkit-overflow-scrolling: touch;
+        padding: 0 20px 40px 20px; -webkit-overflow-scrolling: touch;
     }
-    .horizontal-track { padding: 0 20px; gap: 20px; width: max-content; }
-    .scenario-card {
-        width: 85vw; /* Карточка почти во весь экран на мобилке */
-        height: 60vh;
-    }
-    .card-content { padding: 25px; }
-    .card-desc { opacity: 1; transform: translateY(0); color: #ddd; } /* Текст виден всегда */
+    .horizontal-track { padding: 0; gap: 20px; width: max-content; }
+    .scenario-card { width: 85vw; height: 500px; }
+    
+    .card-content { background: linear-gradient(to top, #000 20%, rgba(0,0,0,0.8) 60%, transparent 100%); padding: 25px; }
+    .card-title { font-size: 1.8rem; }
     
     .tariffs-grid { grid-template-columns: 1fr; }
     .contact-wrapper { grid-template-columns: 1fr; }
