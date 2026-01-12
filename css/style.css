@@ -4,12 +4,12 @@
 :root {
     --bg-color: #050505;
     --text-main: #EAEAEA;
-    --text-muted: #888888;
+    --text-muted: #999999;
     --accent: #D4AF37; /* Noble Gold */
-    --accent-glow: rgba(212, 175, 55, 0.15); /* Мягкое свечение */
+    --accent-glow: rgba(212, 175, 55, 0.15);
     
     --glass-bg: rgba(20, 20, 20, 0.4);
-    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.08);
     --glass-blur: 12px;
 
     --font-display: 'Cormorant Garamond', serif;
@@ -19,7 +19,6 @@
     --header-height: 100px;
     
     --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
-    --ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 *, *::before, *::after {
@@ -93,9 +92,8 @@ h1, h2, h3, h4 {
 }
 
 /* =========================================
-   3. ANIMATED NOISE & GLOWS (NEW!)
+   3. ANIMATED NOISE & GLOWS
    ========================================= */
-/* Живое зерно (Gif-подобный шум на CSS) */
 .noise-overlay {
     position: fixed;
     top: -50%; left: -50%;
@@ -109,19 +107,9 @@ h1, h2, h3, h4 {
 
 @keyframes noise-move {
     0% { transform: translate(0, 0); }
-    10% { transform: translate(-5%, -5%); }
-    20% { transform: translate(-10%, 5%); }
-    30% { transform: translate(5%, -10%); }
-    40% { transform: translate(-5%, 15%); }
-    50% { transform: translate(-10%, 5%); }
-    60% { transform: translate(15%, 0); }
-    70% { transform: translate(0, 10%); }
-    80% { transform: translate(-15%, 0); }
-    90% { transform: translate(10%, 5%); }
-    100% { transform: translate(5%, 0); }
+    100% { transform: translate(5%, 5%); }
 }
 
-/* Фоновые "пятна" (Ambient Glows) */
 .ambient-glow {
     position: fixed;
     width: 600px; height: 600px;
@@ -134,7 +122,7 @@ h1, h2, h3, h4 {
     animation: glow-float 20s infinite alternate ease-in-out;
 }
 .glow-1 { top: -10%; left: -10%; animation-delay: 0s; }
-.glow-2 { bottom: -10%; right: -10%; animation-delay: -10s; background: radial-gradient(circle, rgba(100, 50, 255, 0.08) 0%, transparent 70%); /* Легкий холодный оттенок для контраста */ }
+.glow-2 { bottom: -10%; right: -10%; animation-delay: -10s; background: radial-gradient(circle, rgba(100, 50, 255, 0.08) 0%, transparent 70%); }
 
 @keyframes glow-float {
     0% { transform: translate(0, 0) scale(1); }
@@ -149,7 +137,6 @@ h1, h2, h3, h4 {
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 50%; pointer-events: none; z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
     mix-blend-mode: difference;
 }
 .cursor-inner {
@@ -157,13 +144,11 @@ h1, h2, h3, h4 {
     background-color: var(--accent);
     border-radius: 50%; pointer-events: none; z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s;
 }
 body.hover-active .cursor-outer { width: 80px; height: 80px; border-color: var(--accent); background: rgba(212, 175, 55, 0.05); }
-body.hover-magnetic .cursor-outer { width: 0; height: 0; opacity: 0; }
+body.hover-magnetic .cursor-outer { opacity: 0; }
 body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: transparent; border: 1px solid var(--accent); }
 
-/* Loader */
 .loader {
     position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
     z-index: 10000; display: flex; justify-content: center; align-items: center;
@@ -175,16 +160,16 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 }
 .loader-wrapper { position: relative; z-index: 2; overflow: hidden; text-align: center; }
 .loader-text { display: block; font-family: var(--font-display); font-size: 2rem; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 20px; }
-.loader-progress { width: 0%; height: 1px; background-color: var(--accent); transition: width 0.1s linear; }
+.loader-progress { width: 0%; height: 1px; background-color: var(--accent); }
 
 /* =========================================
    5. HEADER
    ========================================= */
 .header {
     position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
-    z-index: 100; transition: background 0.4s ease, padding 0.4s ease;
+    z-index: 100; transition: background 0.4s ease;
 }
-.header.is-scrolled { background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(10px); }
+.header.is-scrolled { background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(10px); }
 .container { width: 90%; max-width: var(--container-width); margin: 0 auto; }
 .header-inner { height: 100%; display: flex; justify-content: space-between; align-items: center; }
 .logo { font-family: var(--font-display); font-size: 1.8rem; font-weight: 600; letter-spacing: 0.05em; z-index: 105; }
@@ -204,7 +189,6 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .burger-trigger.active .line:nth-child(1) { transform: translateY(6px) rotate(45deg); }
 .burger-trigger.active .line:nth-child(2) { transform: translateY(-7px) rotate(-45deg); }
 
-/* Mobile Menu */
 .mobile-menu {
     position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
     background-color: var(--bg-color); z-index: 101;
@@ -225,12 +209,12 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
    ========================================= */
 .hero { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-.hero-bg img { width: 100%; height: 100%; object-fit: cover; animation: slow-zoom 20s infinite alternate; }
-@keyframes slow-zoom { from { transform: scale(1); } to { transform: scale(1.1); } }
+.hero-bg img { width: 100%; height: 100%; object-fit: cover; }
 .hero-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to bottom, rgba(5,5,5,0.2), #050505);
-    z-index: 2;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.8));
+    background-color: rgba(5, 5, 5, 0.6);
+    z-index: 2; backdrop-filter: blur(3px);
 }
 .hero-container { position: relative; z-index: 3; text-align: center; }
 .hero-content { max-width: 900px; margin: 0 auto; }
@@ -257,7 +241,7 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .circle-btn:hover span, .circle-btn:hover svg { color: black; }
 
 /* =========================================
-   7. MARQUEE (СКОРОСТЬ ИЗМЕНЕНА)
+   7. MARQUEE
    ========================================= */
 .marquee-section {
     padding: 30px 0; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);
@@ -268,16 +252,8 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     font-family: var(--font-display); font-size: 2rem; text-transform: uppercase;
     color: var(--glass-border); padding-right: 50px; font-style: italic;
 }
-
 @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.33%); } }
-
-/* === МОБИЛЬНАЯ СКОРОСТЬ === */
-@media (max-width: 768px) {
-    .marquee-track {
-        /* Делаем быстрее на телефоне (меньше секунд = быстрее) */
-        animation-duration: 10s !important; 
-    }
-}
+@media (max-width: 768px) { .marquee-track { animation-duration: 10s !important; } }
 
 /* =========================================
    8. CONCEPT
@@ -294,7 +270,7 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .concept-image-wrapper:hover img { filter: grayscale(0%); }
 
 /* =========================================
-   9. SCENARIOS (STEAMY GLASS EFFECT)
+   9. SCENARIOS (FIXED FOR ALL DEVICES)
    ========================================= */
 .scenarios-section { padding: 100px 0; background-color: #080808; overflow: hidden; }
 .horizontal-scroll-wrapper { width: 100%; height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; }
@@ -306,32 +282,36 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     border: 1px solid var(--glass-border);
 }
 
-/* Эффект "запотевшего стекла" */
 .scenario-card .card-bg img {
     width: 100%; height: 100%; object-fit: cover;
-    /* По умолчанию: Ч/Б + легкий блюр + затемнение */
-    filter: grayscale(100%) blur(4px) brightness(0.6);
+    filter: grayscale(100%) blur(2px) brightness(0.7); /* По умолчанию темнее и ч/б */
     transform: scale(1.05);
     transition: all 0.6s var(--ease-out);
-    opacity: 0.8;
 }
 
-/* При наведении: Четко + Цвет */
 .scenario-card:hover .card-bg img {
     filter: grayscale(0%) blur(0px) brightness(1);
     transform: scale(1);
-    opacity: 1;
 }
 
+/* FIX: Делаем градиент сильнее, чтобы текст читался всегда */
 .card-content {
     position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 40px;
-    background: linear-gradient(to top, #000 0%, transparent 80%);
+    background: linear-gradient(to top, #000 0%, rgba(0,0,0,0.8) 40%, transparent 100%);
 }
 .card-content.center { justify-content: center; align-items: center; text-align: center; background: none; }
-.card-num { font-family: var(--font-display); font-size: 3rem; color: rgba(255,255,255,0.1); position: absolute; top: 20px; right: 20px; }
+.card-num { font-family: var(--font-display); font-size: 3rem; color: rgba(255,255,255,0.2); position: absolute; top: 20px; right: 20px; }
 .card-title { font-size: 2rem; margin-bottom: 10px; color: #fff; }
-.card-desc { color: #aaa; font-size: 0.95rem; margin-bottom: 20px; opacity: 0; transform: translateY(20px); transition: 0.4s ease; }
-.scenario-card:hover .card-desc { opacity: 1; transform: translateY(0); }
+
+/* FIX: Текст теперь виден всегда, просто становится чуть ярче при наведении */
+.card-desc {
+    color: #ccc; font-size: 0.95rem; margin-bottom: 20px;
+    opacity: 0.8; 
+    transform: translateY(0); 
+    transition: 0.4s ease;
+}
+.scenario-card:hover .card-desc { opacity: 1; color: #fff; }
+
 .card-btn { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--accent); padding-bottom: 5px; color: var(--accent); }
 
 /* =========================================
@@ -340,7 +320,6 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .tariffs-section { padding: 150px 0; position: relative; z-index: 2; }
 .section-header-row { margin-bottom: 80px; text-align: center; }
 .tariffs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
-
 .tariff-item {
     background: var(--glass-bg); border: 1px solid var(--glass-border);
     backdrop-filter: blur(var(--glass-blur)); padding: 50px 30px; border-radius: 8px;
@@ -348,19 +327,17 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 }
 .tariff-item:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateY(-10px); }
 .tariff-item.featured { border-color: var(--accent); background: rgba(212, 175, 55, 0.03); }
-
 .t-head { text-align: center; margin-bottom: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 30px; }
 .t-head h3 { font-size: 1.5rem; margin-bottom: 10px; }
 .t-head .price { font-family: var(--font-display); font-size: 2.2rem; color: var(--accent); }
 .t-features li { margin-bottom: 15px; text-align: center; color: var(--text-muted); font-size: 0.95rem; }
-
 .t-link { display: block; text-align: center; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: #fff; border: 1px solid var(--glass-border); padding: 15px; transition: 0.3s; }
 .t-link:hover { background: white; color: black; }
 .btn-primary.full { display: flex; justify-content: center; width: 100%; padding: 15px; background: var(--accent); color: black; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.1em; transition: 0.3s; cursor: none; }
 .btn-primary.full:hover { background: white; }
 
 /* =========================================
-   11. FORM & CONTACT
+   11. FORM
    ========================================= */
 .contact-section { padding: 100px 0 150px 0; }
 .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
@@ -368,29 +345,29 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .soc-link { font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px; }
 
 .booking-form {
-    background: rgba(10, 10, 10, 0.5); backdrop-filter: blur(20px);
+    background: rgba(20, 20, 20, 0.4); backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border); padding: 50px; border-radius: 4px;
 }
 .input-group { position: relative; margin-bottom: 40px; }
 .input-group input, .input-group select {
-    width: 100%; background: transparent; border: none; border-bottom: 1px solid #333;
+    width: 100%; background: transparent !important; border: none; border-bottom: 1px solid #444;
     padding: 15px 0; color: white; font-size: 1.2rem; font-family: var(--font-body);
-    transition: 0.3s; border-radius: 0; appearance: none;
+    transition: border-color 0.3s; border-radius: 0; appearance: none;
 }
 .input-group input:focus, .input-group select:focus { outline: none; border-bottom-color: var(--accent); }
-.input-group label { position: absolute; top: 15px; left: 0; color: #666; pointer-events: none; transition: 0.3s; font-size: 1.1rem; }
-.input-group input:focus ~ label, .input-group input:not(:placeholder-shown) ~ label { top: -20px; font-size: 0.8rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
-.input-group select option { background: #000; color: #fff; padding: 10px; }
+.input-group label { position: absolute; top: 15px; left: 0; color: #666; pointer-events: none; transition: 0.3s ease; font-size: 1.1rem; }
+.input-group input:focus ~ label, .input-group input:not(:placeholder-shown) ~ label, .input-group select:focus ~ label { top: -20px; font-size: 0.8rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+.input-group select option { background-color: #000; color: #fff; padding: 10px; }
 
 .btn-submit {
     background: transparent; border: 1px solid var(--accent); color: var(--accent);
     padding: 20px 40px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.2em;
-    cursor: pointer; transition: 0.4s; width: 100%; margin-top: 20px;
+    cursor: pointer; transition: 0.4s; width: 100%; margin-top: 20px; overflow: hidden;
 }
 .btn-submit:hover { background: var(--accent); color: #000; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
 
 /* =========================================
-   12. FOOTER (GIANT LOGO)
+   12. FOOTER
    ========================================= */
 .footer { padding: 80px 0 20px 0; border-top: 1px solid var(--glass-border); position: relative; overflow: hidden; }
 .footer-inner { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px; }
@@ -399,33 +376,35 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .footer-col.right { display: flex; flex-direction: column; text-align: right; gap: 10px; }
 .footer-col.right a { font-size: 0.8rem; color: #444; transition: 0.3s; }
 .footer-col.right a:hover { color: var(--accent); }
-
-/* ГИГАНТСКИЙ ЛОГОТИП */
 .footer-giant-text {
-    font-family: var(--font-display);
-    font-size: 24vw; /* Огромный размер */
-    line-height: 0.8;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.03); /* Едва заметный */
-    user-select: none;
-    pointer-events: none;
-    margin-bottom: -40px; /* Сдвигаем вниз */
+    font-family: var(--font-display); font-size: 24vw; line-height: 0.8; text-align: center;
+    color: rgba(255, 255, 255, 0.03); user-select: none; pointer-events: none; margin-bottom: -40px;
 }
 
 /* =========================================
-   13. RESPONSIVE
+   13. RESPONSIVE FIXES
    ========================================= */
 @media (max-width: 1024px) {
     .nav-desktop, .btn-text { display: none; }
     .concept-grid { grid-template-columns: 1fr; }
     .concept-image-wrapper { height: 400px; order: -1; }
     
-    .horizontal-scroll-wrapper { height: auto; display: block; overflow-x: auto; padding-bottom: 40px; }
+    /* FIX: SCENARIO CARDS ON MOBILE */
+    .horizontal-scroll-wrapper {
+        height: auto; display: block; overflow-x: auto;
+        padding-bottom: 40px; -webkit-overflow-scrolling: touch;
+    }
     .horizontal-track { padding: 0 20px; gap: 20px; width: max-content; }
-    .scenario-card { width: 300px; height: 450px; }
+    .scenario-card {
+        width: 85vw; /* Карточка почти во весь экран на мобилке */
+        height: 60vh;
+    }
+    .card-content { padding: 25px; }
+    .card-desc { opacity: 1; transform: translateY(0); color: #ddd; } /* Текст виден всегда */
     
     .tariffs-grid { grid-template-columns: 1fr; }
     .contact-wrapper { grid-template-columns: 1fr; }
+    .booking-form { padding: 30px 20px; }
     
     .cursor-outer, .cursor-inner { display: none; }
     *, *::before, *::after { cursor: auto; }
