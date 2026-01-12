@@ -2,27 +2,22 @@
    1. VARIABLES & RESET
    ========================================= */
 :root {
-    /* Colors */
     --bg-color: #050505;
     --text-main: #EAEAEA;
     --text-muted: #888888;
     --accent: #D4AF37; /* Noble Gold */
-    --accent-glow: rgba(212, 175, 55, 0.3);
+    --accent-glow: rgba(212, 175, 55, 0.15); /* Мягкое свечение */
     
-    /* Glass Effect */
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-blur: 10px;
+    --glass-bg: rgba(20, 20, 20, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-blur: 12px;
 
-    /* Fonts */
     --font-display: 'Cormorant Garamond', serif;
     --font-body: 'Manrope', sans-serif;
 
-    /* Spacing & Sizes */
     --container-width: 1320px;
     --header-height: 100px;
     
-    /* Transitions */
     --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
     --ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
 }
@@ -31,21 +26,11 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    cursor: none; /* Скрываем стандартный курсор для кастомного */
+    cursor: none;
 }
 
-::selection {
-    background-color: var(--accent);
-    color: var(--bg-color);
-}
-
-html.lenis {
-    height: auto;
-}
-
-.lenis.lenis-smooth {
-    scroll-behavior: auto;
-}
+html.lenis { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto; }
 
 body {
     background-color: var(--bg-color);
@@ -55,37 +40,24 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
-    transition: color 0.3s ease;
-}
-
-ul {
-    list-style: none;
-}
-
-img, video {
-    display: block;
-    max-width: 100%;
-    height: auto;
-}
+a { text-decoration: none; color: inherit; transition: color 0.3s ease; }
+ul { list-style: none; }
+img, video { display: block; max-width: 100%; height: auto; }
 
 /* =========================================
-   2. TYPOGRAPHY (Fluid Size)
+   2. TYPOGRAPHY
    ========================================= */
 h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 400;
-    line-height: 1.1;
+    line-height: 1.05;
     margin: 0;
 }
 
 .hero-title {
-    font-size: clamp(3.5rem, 8vw, 7.5rem); /* Адаптивный размер */
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
     text-transform: uppercase;
     letter-spacing: -0.02em;
 }
@@ -96,6 +68,7 @@ h1, h2, h3, h4 {
 }
 
 .italic {
+    font-family: var(--font-display);
     font-style: italic;
     font-weight: 300;
     color: var(--accent);
@@ -115,1002 +88,345 @@ h1, h2, h3, h4 {
 
 .section-label::before {
     content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 30px;
-    height: 1px;
-    background-color: var(--accent);
+    position: absolute; left: 0; top: 50%;
+    width: 30px; height: 1px; background-color: var(--accent);
 }
 
 /* =========================================
-   3. CUSTOM CURSOR
+   3. ANIMATED NOISE & GLOWS (NEW!)
    ========================================= */
-.cursor-outer {
+/* Живое зерно (Gif-подобный шум на CSS) */
+.noise-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 40px;
-    height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9000;
+    animation: noise-move 0.5s infinite linear;
+    opacity: 0.06;
+}
+
+@keyframes noise-move {
+    0% { transform: translate(0, 0); }
+    10% { transform: translate(-5%, -5%); }
+    20% { transform: translate(-10%, 5%); }
+    30% { transform: translate(5%, -10%); }
+    40% { transform: translate(-5%, 15%); }
+    50% { transform: translate(-10%, 5%); }
+    60% { transform: translate(15%, 0); }
+    70% { transform: translate(0, 10%); }
+    80% { transform: translate(-15%, 0); }
+    90% { transform: translate(10%, 5%); }
+    100% { transform: translate(5%, 0); }
+}
+
+/* Фоновые "пятна" (Ambient Glows) */
+.ambient-glow {
+    position: fixed;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 0;
+    opacity: 0.4;
+    filter: blur(80px);
+    animation: glow-float 20s infinite alternate ease-in-out;
+}
+.glow-1 { top: -10%; left: -10%; animation-delay: 0s; }
+.glow-2 { bottom: -10%; right: -10%; animation-delay: -10s; background: radial-gradient(circle, rgba(100, 50, 255, 0.08) 0%, transparent 70%); /* Легкий холодный оттенок для контраста */ }
+
+@keyframes glow-float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(100px, 50px) scale(1.2); }
+}
+
+/* =========================================
+   4. CURSOR & LOADER
+   ========================================= */
+.cursor-outer {
+    position: fixed; top: 0; left: 0; width: 40px; height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%; pointer-events: none; z-index: 9999;
     transform: translate(-50%, -50%);
     transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
     mix-blend-mode: difference;
 }
-
 .cursor-inner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 6px;
-    height: 6px;
+    position: fixed; top: 0; left: 0; width: 6px; height: 6px;
     background-color: var(--accent);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
+    border-radius: 50%; pointer-events: none; z-index: 9999;
     transform: translate(-50%, -50%);
     transition: width 0.3s, height 0.3s;
 }
+body.hover-active .cursor-outer { width: 80px; height: 80px; border-color: var(--accent); background: rgba(212, 175, 55, 0.05); }
+body.hover-magnetic .cursor-outer { width: 0; height: 0; opacity: 0; }
+body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: transparent; border: 1px solid var(--accent); }
 
-/* Hover States for Cursor */
-body.hover-active .cursor-outer {
-    width: 80px;
-    height: 80px;
-    border-color: var(--accent);
-    background-color: rgba(212, 175, 55, 0.05);
-}
-
-body.hover-magnetic .cursor-outer {
-    width: 0;
-    height: 0;
-    opacity: 0;
-}
-
-body.hover-magnetic .cursor-inner {
-    width: 20px;
-    height: 20px;
-    background-color: transparent;
-    border: 2px solid var(--accent);
-}
-
-/* =========================================
-   4. LOADER & NOISE
-   ========================================= */
-.noise-filter {
-    position: absolute;
-    width: 0;
-    height: 0;
-    pointer-events: none;
-    opacity: 0;
-}
-
-.noise-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9000;
-    opacity: 0.07;
-    filter: url(#noise);
-}
-
+/* Loader */
 .loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: 10000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none; /* JS will handle locking */
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    z-index: 10000; display: flex; justify-content: center; align-items: center;
+    pointer-events: none;
 }
-
 .loader-curtain {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--bg-color);
-    z-index: 1;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: var(--bg-color); z-index: 1;
 }
-
-.loader-wrapper {
-    position: relative;
-    z-index: 2;
-    overflow: hidden;
-    text-align: center;
-}
-
-.loader-text {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 2rem;
-    letter-spacing: 0.2em;
-    color: var(--accent);
-    margin-bottom: 20px;
-}
-
-.loader-progress {
-    width: 0%;
-    height: 2px;
-    background-color: var(--accent);
-    transition: width 0.1s linear;
-}
+.loader-wrapper { position: relative; z-index: 2; overflow: hidden; text-align: center; }
+.loader-text { display: block; font-family: var(--font-display); font-size: 2rem; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 20px; }
+.loader-progress { width: 0%; height: 1px; background-color: var(--accent); transition: width 0.1s linear; }
 
 /* =========================================
-   5. HEADER & NAV
+   5. HEADER
    ========================================= */
 .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: var(--header-height);
-    z-index: 100;
-    transition: background-color 0.4s ease, padding 0.4s ease;
+    position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
+    z-index: 100; transition: background 0.4s ease, padding 0.4s ease;
 }
-
-.header.is-scrolled {
-    background-color: rgba(5, 5, 5, 0.8);
-    backdrop-filter: blur(10px);
-}
-
-.container {
-    width: 90%;
-    max-width: var(--container-width);
-    margin: 0 auto;
-}
-
-.header-inner {
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-family: var(--font-display);
-    font-size: 1.8rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    position: relative;
-    z-index: 105;
-}
-
-.nav-desktop {
-    display: flex;
-    gap: 4vw;
-}
-
-.nav-link {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Hover effect for links */
+.header.is-scrolled { background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(10px); }
+.container { width: 90%; max-width: var(--container-width); margin: 0 auto; }
+.header-inner { height: 100%; display: flex; justify-content: space-between; align-items: center; }
+.logo { font-family: var(--font-display); font-size: 1.8rem; font-weight: 600; letter-spacing: 0.05em; z-index: 105; }
+.nav-desktop { display: flex; gap: 4vw; }
+.nav-link { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); position: relative; overflow: hidden; }
 .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: var(--accent);
-    transform: translateX(-101%);
-    transition: transform 0.4s var(--ease-out);
+    content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px;
+    background-color: var(--accent); transform: translateX(-101%); transition: 0.4s var(--ease-out);
 }
-
-.nav-link:hover {
-    color: var(--text-main);
-}
-
-.nav-link:hover::after {
-    transform: translateX(0);
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    z-index: 105;
-}
-
-.btn-text {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    padding-bottom: 2px;
-}
-
-.btn-text:hover {
-    color: var(--accent);
-    border-color: var(--accent);
-}
-
-/* Burger Trigger */
-.burger-trigger {
-    width: 40px;
-    height: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    cursor: pointer; /* Для JS событий */
-}
-
-.burger-trigger .line {
-    display: block;
-    width: 100%;
-    height: 1px;
-    background-color: white;
-    transition: transform 0.4s var(--ease-in-out), opacity 0.4s;
-}
-
-.burger-trigger.active .line:nth-child(1) {
-    transform: translateY(10px) rotate(45deg);
-}
-.burger-trigger.active .line:nth-child(2) {
-    transform: translateY(-9px) rotate(-45deg);
-}
+.nav-link:hover { color: var(--text-main); }
+.nav-link:hover::after { transform: translateX(0); }
+.header-right { display: flex; align-items: center; gap: 30px; z-index: 105; }
+.btn-text { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255, 255, 255, 0.3); padding-bottom: 2px; }
+.btn-text:hover { color: var(--accent); border-color: var(--accent); }
+.burger-trigger { width: 30px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; }
+.burger-trigger .line { display: block; width: 100%; height: 1px; background-color: white; transition: 0.4s; }
+.burger-trigger.active .line:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.burger-trigger.active .line:nth-child(2) { transform: translateY(-7px) rotate(-45deg); }
 
 /* Mobile Menu */
 .mobile-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: var(--bg-color);
-    z-index: 101;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    background-color: var(--bg-color); z-index: 101;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
 }
-
-.mobile-menu.active {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.mobile-menu-links {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-}
-
+.mobile-menu.active { opacity: 1; pointer-events: all; }
+.mobile-menu-links { display: flex; flex-direction: column; align-items: center; gap: 2rem; }
 .m-link {
-    font-family: var(--font-display);
-    font-size: 3rem;
-    color: var(--text-muted);
-    transform: translateY(30px);
-    opacity: 0;
-    transition: transform 0.5s var(--ease-out), opacity 0.5s;
+    font-family: var(--font-display); font-size: 3rem; color: var(--text-muted);
+    transform: translateY(30px); opacity: 0; transition: 0.5s var(--ease-out);
 }
-
-.mobile-menu.active .m-link {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.m-link:hover, .m-link.accent {
-    color: var(--accent);
-    font-style: italic;
-}
+.mobile-menu.active .m-link { transform: translateY(0); opacity: 1; }
+.m-link:hover, .m-link.accent { color: var(--accent); font-style: italic; }
 
 /* =========================================
-   6. HERO SECTION
+   6. HERO
    ========================================= */
-.hero {
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.hero-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
-.hero-bg video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
+.hero { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+.hero-bg img { width: 100%; height: 100%; object-fit: cover; animation: slow-zoom 20s infinite alternate; }
+@keyframes slow-zoom { from { transform: scale(1); } to { transform: scale(1.1); } }
 .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* Делаем более темный и глубокий градиент вместо простой прозрачности */
-    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.8));
-    background-color: rgba(5, 5, 5, 0.6); /* Общее затемнение */
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(5,5,5,0.2), #050505);
     z-index: 2;
-    backdrop-filter: blur(3px); /* Легкое размытие фона, чтобы текст был четче */
 }
+.hero-container { position: relative; z-index: 3; text-align: center; }
+.hero-content { max-width: 900px; margin: 0 auto; }
+.hero-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 20px; opacity: 0; color: var(--accent); }
+.line-wrapper { overflow: hidden; margin-bottom: -10px; }
+.line-reveal { display: block; transform: translateY(100%); }
+.hero-desc { margin-top: 3rem; font-size: 1.1rem; color: #ccc; opacity: 0; }
+.hero-action { margin-top: 4rem; display: flex; justify-content: center; opacity: 0; }
 
-.hero-container {
-    position: relative;
-    z-index: 3;
-    text-align: center;
-}
-
-.hero-content {
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.hero-label {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    margin-bottom: 20px;
-    opacity: 0; /* JS reveal */
-}
-
-/* Masking for Text Reveal */
-.line-wrapper {
-    overflow: hidden;
-    margin-bottom: -10px; /* Tight leading */
-}
-
-.line-reveal {
-    display: block;
-    transform: translateY(100%); /* Начальное состояние для GSAP */
-}
-
-.hero-desc {
-    margin-top: 3rem;
-    font-size: 1.1rem;
-    color: #ccc;
-    opacity: 0; /* JS reveal */
-}
-
-.hero-action {
-    margin-top: 4rem;
-    display: flex;
-    justify-content: center;
-    opacity: 0; /* JS reveal */
-}
-
-/* Circle Button */
 .circle-btn {
-    width: 120px;
-    height: 120px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s;
+    width: 120px; height: 120px; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    position: relative; overflow: hidden; transition: border-color 0.3s;
 }
-
-.circle-btn span {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 5px;
-    z-index: 2;
-}
-
-.circle-btn svg {
-    width: 20px;
-    height: 20px;
-    z-index: 2;
-}
-
+.circle-btn span { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; z-index: 2; }
+.circle-btn svg { width: 20px; height: 20px; z-index: 2; }
 .circle-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--accent);
-    border-radius: 50%;
-    transform: scale(0);
-    transition: transform 0.4s var(--ease-out);
-    z-index: 1;
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: var(--accent); border-radius: 50%; transform: scale(0);
+    transition: transform 0.4s var(--ease-out); z-index: 1;
 }
-
-.circle-btn:hover {
-    border-color: transparent;
-}
-
-.circle-btn:hover::before {
-    transform: scale(1);
-}
-
-.circle-btn:hover span, .circle-btn:hover svg {
-    color: var(--bg-color);
-}
+.circle-btn:hover { border-color: transparent; }
+.circle-btn:hover::before { transform: scale(1); }
+.circle-btn:hover span, .circle-btn:hover svg { color: black; }
 
 /* =========================================
-   7. MARQUEE (Бегущая строка)
+   7. MARQUEE (СКОРОСТЬ ИЗМЕНЕНА)
    ========================================= */
 .marquee-section {
-    padding: 30px 0;
-    border-top: 1px solid var(--glass-border);
-    border-bottom: 1px solid var(--glass-border);
-    overflow: hidden;
-    background: var(--bg-color);
-    position: relative;
-    z-index: 5;
+    padding: 30px 0; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);
+    overflow: hidden; background: var(--bg-color); position: relative; z-index: 5;
 }
-
-.marquee-track {
-    display: flex;
-    white-space: nowrap;
-    animation: marquee 30s linear infinite;
-}
-
+.marquee-track { display: flex; white-space: nowrap; animation: marquee 30s linear infinite; }
 .marquee-track span {
-    font-family: var(--font-display);
-    font-size: 2rem;
-    text-transform: uppercase;
-    color: var(--glass-border); /* Faded text */
-    padding-right: 50px;
-    font-style: italic;
+    font-family: var(--font-display); font-size: 2rem; text-transform: uppercase;
+    color: var(--glass-border); padding-right: 50px; font-style: italic;
 }
 
-@keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-33.33%); }
-}
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.33%); } }
 
-/* =========================================
-   8. CONCEPT SECTION
-   ========================================= */
-.concept-section {
-    padding: 150px 0;
-    position: relative;
-}
-
-.concept-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-}
-
-.text-body {
-    font-size: 1.25rem;
-    color: var(--text-muted);
-    margin-bottom: 3rem;
-    max-width: 500px;
-}
-
-.concept-list li {
-    display: flex;
-    align-items: flex-start;
-    padding: 20px 0;
-    border-top: 1px solid var(--glass-border);
-}
-
-.concept-list li:last-child {
-    border-bottom: 1px solid var(--glass-border);
-}
-
-.concept-list .num {
-    font-family: var(--font-display);
-    color: var(--accent);
-    margin-right: 30px;
-    font-size: 1.2rem;
-}
-
-.concept-list .val {
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin-right: 20px;
-    min-width: 120px;
-}
-
-.concept-list .sub {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-}
-
-.concept-image-wrapper {
-    position: relative;
-    height: 600px;
-    width: 100%;
-    overflow: hidden;
-    border-radius: 4px; /* Minimal radius */
-}
-
-.reveal-image {
-    width: 100%;
-    height: 100%;
-    /* Masking animation handled by GSAP */
-}
-
-.reveal-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: scale(1.2); /* For Parallax */
-}
-
-/* =========================================
-   9. SCENARIOS (Horizontal Scroll)
-   ========================================= */
-.scenarios-section {
-    padding: 100px 0;
-    background-color: #080808;
-    overflow: hidden; /* Скрываем скроллбар */
-}
-
-.horizontal-scroll-wrapper {
-    width: 100%;
-    height: 100vh; /* Высота для пина */
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.horizontal-track {
-    display: flex;
-    gap: 100px;
-    padding-left: 10vw; /* Отступ слева */
-    padding-right: 10vw;
-    width: max-content; /* Ширина по контенту */
-}
-
-.scenario-card {
-    width: 500px; /* Фиксированная ширина */
-    height: 60vh;
-    position: relative;
-    flex-shrink: 0;
-    overflow: hidden;
-    border-radius: 8px;
-    background-color: #111;
-}
-
-.scenario-card .card-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
-.scenario-card .card-bg img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.6s var(--ease-out);
-    opacity: 0.7;
-}
-
-.scenario-card:hover .card-bg img {
-    transform: scale(1.1);
-    opacity: 0.4;
-}
-
-.card-content {
-    position: relative;
-    z-index: 2;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 40px;
-    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-}
-
-.card-content.center {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background: none;
-}
-
-.card-num {
-    font-family: var(--font-display);
-    font-size: 3rem;
-    color: var(--glass-border);
-    position: absolute;
-    top: 20px;
-    right: 20px;
-}
-
-.card-title {
-    font-size: 2rem;
-    margin-bottom: 10px;
-}
-
-.card-desc {
-    color: #ccc;
-    font-size: 0.9rem;
-    margin-bottom: 20px;
-    transform: translateY(20px);
-    opacity: 0;
-    transition: all 0.4s ease;
-}
-
-.scenario-card:hover .card-desc {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.card-btn {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    display: inline-block;
-    border-bottom: 1px solid var(--accent);
-    padding-bottom: 5px;
-}
-
-/* =========================================
-   10. TARIFFS
-   ========================================= */
-.tariffs-section {
-    padding: 150px 0;
-}
-
-.section-header-row {
-    margin-bottom: 80px;
-    text-align: center;
-}
-
-.tariffs-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-}
-
-.tariff-item {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(var(--glass-blur));
-    padding: 50px 30px;
-    border-radius: 12px;
-    position: relative;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-}
-
-.tariff-item:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-10px);
-}
-
-.tariff-item.featured {
-    border-color: var(--accent);
-    overflow: hidden;
-}
-
-.t-bg {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-    opacity: 0.3;
-    pointer-events: none;
-}
-
-.t-head {
-    text-align: center;
-    margin-bottom: 40px;
-    border-bottom: 1px solid var(--glass-border);
-    padding-bottom: 30px;
-}
-
-.t-head h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-}
-
-.t-head .price {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
-    color: var(--accent);
-}
-
-.t-features {
-    margin-bottom: 40px;
-}
-
-.t-features li {
-    margin-bottom: 15px;
-    text-align: center;
-    color: var(--text-muted);
-}
-
-.t-link {
-    display: block;
-    text-align: center;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #fff;
-    border: 1px solid var(--glass-border);
-    padding: 15px;
-    border-radius: 4px;
-    transition: 0.3s;
-}
-
-.t-link:hover {
-    background: white;
-    color: black;
-}
-
-.btn-primary.full {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 15px;
-    background: var(--accent);
-    color: black;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    letter-spacing: 0.1em;
-    border-radius: 4px;
-    transition: 0.3s;
-}
-
-.btn-primary.full:hover {
-    background: white;
-}
-
-/* =========================================
-   11. CONTACT & FORM
-   ========================================= */
-.contact-section {
-    padding: 100px 0 150px 0;
-}
-
-.contact-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-}
-
-.contact-text p {
-    margin-bottom: 40px;
-    color: var(--text-muted);
-    font-size: 1.1rem;
-}
-
-.socials-row {
-    display: flex;
-    gap: 30px;
-}
-
-.soc-link {
-    font-size: 1.2rem;
-    border-bottom: 1px solid var(--glass-border);
-    padding-bottom: 5px;
-}
-
-.booking-form {
-    /* Делаем фон формы прозрачнее и стильнее */
-    background: rgba(20, 20, 20, 0.4);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    padding: 50px;
-    border-radius: 4px; /* Более строгие углы */
-}
-
-.input-group {
-    position: relative;
-    margin-bottom: 40px; /* Больше воздуха между полями */
-}
-
-/* СТИЛЬ ПОЛЕЙ ВВОДА (Нижнее подчеркивание) */
-.input-group input, 
-.input-group select {
-    width: 100%;
-    background: transparent !important; /* Прозрачный фон */
-    border: none;
-    border-bottom: 1px solid #444; /* Только нижняя линия */
-    padding: 15px 0;
-    color: white;
-    font-size: 1.2rem;
-    font-family: var(--font-body);
-    transition: border-color 0.3s;
-    border-radius: 0; /* Убираем скругления браузера */
-    -webkit-appearance: none; /* Убираем стандартный стиль Safari/Chrome */
-    appearance: none;
-    cursor: none; /* Чтобы работал наш кастомный курсор */
-}
-
-/* При нажатии линия становится золотой */
-.input-group input:focus, 
-.input-group select:focus {
-    outline: none;
-    border-bottom-color: var(--accent);
-}
-
-/* Лейблы (Подписи) */
-.input-group label {
-    position: absolute;
-    top: 15px;
-    left: 0;
-    color: #666;
-    pointer-events: none;
-    transition: 0.3s ease;
-    font-size: 1.1rem;
-}
-
-/* Анимация лейбла при вводе */
-.input-group input:focus ~ label,
-.input-group input:not(:placeholder-shown) ~ label,
-.input-group select:focus ~ label,
-.input-group select:valid ~ label {
-    top: -20px;
-    font-size: 0.8rem;
-    color: var(--accent);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-}
-
-/* ФИКС ДЛЯ ВЫПАДАЮЩЕГО СПИСКА (SELECT) */
-.input-group select {
-    color: white;
-}
-
-/* Цвет выпадающих опций (чтобы не было белого фона) */
-.input-group select option {
-    background-color: #000; /* Черный фон */
-    color: #fff; /* Белый текст */
-    padding: 10px;
-}
-
-/* КНОПКА ОТПРАВКИ */
-.btn-submit {
-    background: transparent;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    padding: 20px 40px;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    cursor: pointer; /* Для мыши */
-    transition: 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
-    width: 100%;
-    margin-top: 20px;
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-submit:hover {
-    background: var(--accent);
-    color: #000;
-    box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
-}
-
-/* Адаптив для формы */
+/* === МОБИЛЬНАЯ СКОРОСТЬ === */
 @media (max-width: 768px) {
-    .booking-form {
-        padding: 30px 20px;
+    .marquee-track {
+        /* Делаем быстрее на телефоне (меньше секунд = быстрее) */
+        animation-duration: 10s !important; 
     }
 }
 
 /* =========================================
-   12. FOOTER
+   8. CONCEPT
    ========================================= */
-.footer {
-    padding: 50px 0;
-    border-top: 1px solid var(--glass-border);
+.concept-section { padding: 150px 0; position: relative; }
+.concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.text-body { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 3rem; max-width: 500px; }
+.concept-list li { display: flex; align-items: flex-start; padding: 20px 0; border-top: 1px solid var(--glass-border); }
+.concept-list .num { font-family: var(--font-display); color: var(--accent); margin-right: 30px; font-size: 1.2rem; }
+.concept-list .val { font-size: 1.1rem; font-weight: 500; margin-right: 20px; min-width: 120px; }
+.concept-list .sub { font-size: 0.95rem; color: var(--text-muted); }
+.concept-image-wrapper { position: relative; height: 600px; width: 100%; overflow: hidden; }
+.reveal-image img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.5s ease; }
+.concept-image-wrapper:hover img { filter: grayscale(0%); }
+
+/* =========================================
+   9. SCENARIOS (STEAMY GLASS EFFECT)
+   ========================================= */
+.scenarios-section { padding: 100px 0; background-color: #080808; overflow: hidden; }
+.horizontal-scroll-wrapper { width: 100%; height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+.horizontal-track { display: flex; gap: 60px; padding-left: 10vw; padding-right: 10vw; width: max-content; }
+
+.scenario-card {
+    width: 450px; height: 65vh; position: relative; flex-shrink: 0;
+    overflow: hidden; border-radius: 4px; background-color: #050505;
+    border: 1px solid var(--glass-border);
 }
 
-.footer-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+/* Эффект "запотевшего стекла" */
+.scenario-card .card-bg img {
+    width: 100%; height: 100%; object-fit: cover;
+    /* По умолчанию: Ч/Б + легкий блюр + затемнение */
+    filter: grayscale(100%) blur(4px) brightness(0.6);
+    transform: scale(1.05);
+    transition: all 0.6s var(--ease-out);
+    opacity: 0.8;
 }
 
-.logo-sm {
+/* При наведении: Четко + Цвет */
+.scenario-card:hover .card-bg img {
+    filter: grayscale(0%) blur(0px) brightness(1);
+    transform: scale(1);
+    opacity: 1;
+}
+
+.card-content {
+    position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 40px;
+    background: linear-gradient(to top, #000 0%, transparent 80%);
+}
+.card-content.center { justify-content: center; align-items: center; text-align: center; background: none; }
+.card-num { font-family: var(--font-display); font-size: 3rem; color: rgba(255,255,255,0.1); position: absolute; top: 20px; right: 20px; }
+.card-title { font-size: 2rem; margin-bottom: 10px; color: #fff; }
+.card-desc { color: #aaa; font-size: 0.95rem; margin-bottom: 20px; opacity: 0; transform: translateY(20px); transition: 0.4s ease; }
+.scenario-card:hover .card-desc { opacity: 1; transform: translateY(0); }
+.card-btn { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--accent); padding-bottom: 5px; color: var(--accent); }
+
+/* =========================================
+   10. TARIFFS
+   ========================================= */
+.tariffs-section { padding: 150px 0; position: relative; z-index: 2; }
+.section-header-row { margin-bottom: 80px; text-align: center; }
+.tariffs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+
+.tariff-item {
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    backdrop-filter: blur(var(--glass-blur)); padding: 50px 30px; border-radius: 8px;
+    position: relative; transition: 0.3s;
+}
+.tariff-item:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateY(-10px); }
+.tariff-item.featured { border-color: var(--accent); background: rgba(212, 175, 55, 0.03); }
+
+.t-head { text-align: center; margin-bottom: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 30px; }
+.t-head h3 { font-size: 1.5rem; margin-bottom: 10px; }
+.t-head .price { font-family: var(--font-display); font-size: 2.2rem; color: var(--accent); }
+.t-features li { margin-bottom: 15px; text-align: center; color: var(--text-muted); font-size: 0.95rem; }
+
+.t-link { display: block; text-align: center; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: #fff; border: 1px solid var(--glass-border); padding: 15px; transition: 0.3s; }
+.t-link:hover { background: white; color: black; }
+.btn-primary.full { display: flex; justify-content: center; width: 100%; padding: 15px; background: var(--accent); color: black; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.1em; transition: 0.3s; cursor: none; }
+.btn-primary.full:hover { background: white; }
+
+/* =========================================
+   11. FORM & CONTACT
+   ========================================= */
+.contact-section { padding: 100px 0 150px 0; }
+.contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.socials-row { display: flex; gap: 30px; margin-top: 30px; }
+.soc-link { font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px; }
+
+.booking-form {
+    background: rgba(10, 10, 10, 0.5); backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border); padding: 50px; border-radius: 4px;
+}
+.input-group { position: relative; margin-bottom: 40px; }
+.input-group input, .input-group select {
+    width: 100%; background: transparent; border: none; border-bottom: 1px solid #333;
+    padding: 15px 0; color: white; font-size: 1.2rem; font-family: var(--font-body);
+    transition: 0.3s; border-radius: 0; appearance: none;
+}
+.input-group input:focus, .input-group select:focus { outline: none; border-bottom-color: var(--accent); }
+.input-group label { position: absolute; top: 15px; left: 0; color: #666; pointer-events: none; transition: 0.3s; font-size: 1.1rem; }
+.input-group input:focus ~ label, .input-group input:not(:placeholder-shown) ~ label { top: -20px; font-size: 0.8rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+.input-group select option { background: #000; color: #fff; padding: 10px; }
+
+.btn-submit {
+    background: transparent; border: 1px solid var(--accent); color: var(--accent);
+    padding: 20px 40px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.2em;
+    cursor: pointer; transition: 0.4s; width: 100%; margin-top: 20px;
+}
+.btn-submit:hover { background: var(--accent); color: #000; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
+
+/* =========================================
+   12. FOOTER (GIANT LOGO)
+   ========================================= */
+.footer { padding: 80px 0 20px 0; border-top: 1px solid var(--glass-border); position: relative; overflow: hidden; }
+.footer-inner { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px; }
+.logo-sm { font-family: var(--font-display); font-size: 1.2rem; display: block; margin-bottom: 10px; }
+.copyright { font-size: 0.8rem; color: #444; }
+.footer-col.right { display: flex; flex-direction: column; text-align: right; gap: 10px; }
+.footer-col.right a { font-size: 0.8rem; color: #444; transition: 0.3s; }
+.footer-col.right a:hover { color: var(--accent); }
+
+/* ГИГАНТСКИЙ ЛОГОТИП */
+.footer-giant-text {
     font-family: var(--font-display);
-    font-size: 1.2rem;
-    display: block;
-    margin-bottom: 10px;
-}
-
-.copyright {
-    font-size: 0.8rem;
-    color: #555;
-}
-
-.footer-col.right {
-    display: flex;
-    flex-direction: column;
-    text-align: right;
-    gap: 10px;
-}
-
-.footer-col.right a {
-    font-size: 0.8rem;
-    color: #555;
-}
-
-.footer-col.right a:hover {
-    color: white;
+    font-size: 24vw; /* Огромный размер */
+    line-height: 0.8;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.03); /* Едва заметный */
+    user-select: none;
+    pointer-events: none;
+    margin-bottom: -40px; /* Сдвигаем вниз */
 }
 
 /* =========================================
    13. RESPONSIVE
    ========================================= */
 @media (max-width: 1024px) {
-    .nav-desktop, .btn-text {
-        display: none;
-    }
+    .nav-desktop, .btn-text { display: none; }
+    .concept-grid { grid-template-columns: 1fr; }
+    .concept-image-wrapper { height: 400px; order: -1; }
     
-    .concept-grid {
-        grid-template-columns: 1fr;
-    }
+    .horizontal-scroll-wrapper { height: auto; display: block; overflow-x: auto; padding-bottom: 40px; }
+    .horizontal-track { padding: 0 20px; gap: 20px; width: max-content; }
+    .scenario-card { width: 300px; height: 450px; }
     
-    .concept-image-wrapper {
-        height: 400px;
-        order: -1;
-    }
+    .tariffs-grid { grid-template-columns: 1fr; }
+    .contact-wrapper { grid-template-columns: 1fr; }
     
-    .horizontal-scroll-wrapper {
-        height: auto;
-        display: block;
-        overflow-x: auto; /* Fallback for tablets */
-    }
-    
-    .horizontal-track {
-        padding: 0 20px;
-        gap: 20px;
-        width: max-content;
-    }
-    
-    .scenario-card {
-        width: 300px;
-        height: 450px;
-    }
-    
-    .tariffs-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .contact-wrapper {
-        grid-template-columns: 1fr;
-    }
-    
-    /* Отключаем кастомный курсор на таче */
-    .cursor-outer, .cursor-inner {
-        display: none;
-    }
-    *, *::before, *::after {
-        cursor: auto;
-    }
+    .cursor-outer, .cursor-inner { display: none; }
+    *, *::before, *::after { cursor: auto; }
 }
