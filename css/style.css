@@ -25,7 +25,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    cursor: none; /* Скрываем системный курсор */
+    cursor: none; /* Скрываем системный курсор для кастомного */
 }
 
 html.lenis { height: auto; }
@@ -92,7 +92,7 @@ h1, h2, h3, h4 {
 }
 
 /* =========================================
-   3. AMBIENT GLOWS (Живой фон)
+   3. AMBIENT GLOWS (ФОН)
    ========================================= */
 .ambient-glow {
     position: fixed;
@@ -254,17 +254,34 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .concept-image-wrapper:hover img { filter: grayscale(0%); }
 
 /* =========================================
-   9. SCENARIOS (Карточки с видимым текстом)
+   9. SCENARIOS (КАРУСЕЛЬ + КНОПКИ)
    ========================================= */
-.scenarios-section { padding: 100px 0; background-color: #080808; overflow: hidden; position: relative; z-index: 2; }
-.horizontal-scroll-wrapper { width: 100%; height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; }
-.horizontal-track { display: flex; gap: 40px; padding-left: 10vw; padding-right: 10vw; width: max-content; }
+.scenarios-section { padding: 120px 0; background-color: #080808; position: relative; z-index: 2; }
+.horizontal-scroll-wrapper { width: 100%; position: relative; display: flex; justify-content: center; }
 
+/* Трек карусели */
+.horizontal-track { 
+    display: flex; gap: 40px; 
+    overflow-x: auto; /* Нативный скролл */
+    scroll-behavior: smooth; 
+    padding: 20px 10vw 60px 10vw; 
+    width: 100%;
+    /* Скрываем скроллбар */
+    -ms-overflow-style: none; scrollbar-width: none;
+    /* Snap effect */
+    scroll-snap-type: x mandatory;
+}
+.horizontal-track::-webkit-scrollbar { display: none; }
+
+/* Карточка */
 .scenario-card {
     width: 400px; height: 600px; position: relative; flex-shrink: 0;
     overflow: hidden; border-radius: 4px; background-color: #000;
     border: 1px solid var(--glass-border);
+    scroll-snap-align: center; /* Центровка */
 }
+
+/* Картинка */
 .card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 .scenario-card .card-bg img {
     width: 100%; height: 100%; object-fit: cover;
@@ -273,15 +290,16 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 }
 .scenario-card:hover .card-bg img { transform: scale(1.05); filter: brightness(0.5); }
 
-/* Контент поверх картинки */
+/* Контент (Абсолютное позиционирование) */
 .card-content {
     position: absolute; bottom: 0; left: 0; width: 100%; z-index: 10;
     padding: 30px; display: flex; flex-direction: column; justify-content: flex-end;
-    /* Усиленный градиент */
+    /* Градиент снизу, чтобы текст читался всегда */
     background: linear-gradient(to top, #000 0%, rgba(0,0,0,0.85) 40%, transparent 100%);
 }
 .card-content.center { height: 100%; justify-content: center; align-items: center; text-align: center; background: rgba(0,0,0,0.6); }
 
+/* Тексты на карточке */
 .card-num { font-family: var(--font-display); font-size: 4rem; color: rgba(255,255,255,0.1); position: absolute; top: 20px; right: 20px; z-index: 5; }
 .card-title { font-size: 2rem; margin-bottom: 10px; color: #fff; z-index: 11; }
 .card-desc { 
@@ -293,6 +311,20 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     border-bottom: 1px solid var(--accent); padding-bottom: 5px; color: var(--accent); 
     display: inline-block; width: fit-content; z-index: 11;
 }
+
+/* Кнопки Навигации (Стрелки) */
+.nav-arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 60px; height: 60px; border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px); color: white;
+    display: flex; justify-content: center; align-items: center;
+    cursor: pointer; z-index: 20; transition: 0.3s;
+}
+.nav-arrow svg { width: 24px; height: 24px; }
+.nav-arrow:hover { border-color: var(--accent); color: var(--accent); background: black; }
+.nav-arrow.prev { left: 30px; }
+.nav-arrow.next { right: 30px; }
 
 /* =========================================
    10. TARIFFS
@@ -369,10 +401,14 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     .concept-grid { grid-template-columns: 1fr; }
     .concept-image-wrapper { height: 400px; order: -1; }
     
+    /* Скрываем стрелки, используем свайп */
+    .nav-arrow { display: none; } 
+    
     .horizontal-scroll-wrapper {
         height: auto; display: block; overflow-x: auto;
         padding: 0 20px 40px 20px; -webkit-overflow-scrolling: touch;
     }
+    /* Выравнивание карточек слева */
     .horizontal-track { padding: 0; gap: 20px; width: max-content; }
     .scenario-card { width: 85vw; height: 500px; }
     
