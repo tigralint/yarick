@@ -1,20 +1,27 @@
 /* =========================================
-   1. VARIABLES & RESET
+   1. VARIABLES & RESET (FutureOS Glass)
    ========================================= */
 :root {
-    --bg-color: #050505;
-    --text-main: #EAEAEA;
-    --text-muted: #999999;
+    /* Основные цвета */
+    --bg-color: #030303; /* Глубокий черный для контраста */
+    --text-main: #F2F2F2;
+    --text-muted: #888888;
     --accent: #D4AF37; /* Noble Gold */
     --accent-glow: rgba(212, 175, 55, 0.12);
     
-    --glass-bg: rgba(20, 20, 20, 0.4);
+    /* iOS 26 Glass Tokens */
+    --glass-blur: 40px;          /* Глубокое размытие */
+    --glass-saturation: 180%;    /* Насыщенность цветов под стеклом */
+    --glass-bg: rgba(20, 20, 20, 0.6);
     --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-blur: 12px;
+    --glass-highlight: rgba(255, 255, 255, 0.15); /* Блик на грани */
+    --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Мягкая тень */
 
+    /* Шрифты */
     --font-display: 'Cormorant Garamond', serif;
     --font-body: 'Manrope', sans-serif;
 
+    /* Размеры */
     --container-width: 1320px;
     --header-height: 100px;
     
@@ -25,10 +32,10 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    cursor: none; /* Скрываем системный курсор для кастомного */
+    cursor: none; /* Кастомный курсор */
 }
 
-/* Стилизация выделения текста (Premium feel) */
+/* Стилизация выделения текста */
 ::selection {
     background-color: var(--accent);
     color: #000;
@@ -61,23 +68,26 @@ ul { list-style: none; }
 img, video { display: block; max-width: 100%; height: auto; }
 
 /* =========================================
-   2. TYPOGRAPHY
+   2. TYPOGRAPHY (Editorial Style)
    ========================================= */
 h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 400;
     line-height: 1.05;
     margin: 0;
+    text-wrap: balance; /* Балансировка заголовков */
 }
 
 .hero-title {
     font-size: clamp(3.5rem, 8vw, 7.5rem);
     text-transform: uppercase;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em; /* Плотный кернинг для "дороговизны" */
+    color: var(--text-main);
 }
 
 .section-title {
     font-size: clamp(2.5rem, 5vw, 4.5rem);
+    letter-spacing: -0.02em;
     margin-bottom: 2rem;
 }
 
@@ -86,14 +96,16 @@ h1, h2, h3, h4 {
     font-style: italic;
     font-weight: 300;
     color: var(--accent);
+    letter-spacing: -0.01em;
 }
 
 .section-label {
-    display: block;
+    display: inline-block;
     font-family: var(--font-body);
     font-size: 0.75rem;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.2em; /* Широкая разрядка для технических подписей */
     color: var(--text-muted);
     margin-bottom: 1.5rem;
     position: relative;
@@ -104,6 +116,11 @@ h1, h2, h3, h4 {
     content: '';
     position: absolute; left: 0; top: 50%;
     width: 30px; height: 1px; background-color: var(--accent);
+}
+
+p {
+    text-wrap: pretty; /* Избегает висячих строк в абзацах */
+    opacity: 0.9;
 }
 
 /* =========================================
@@ -167,9 +184,17 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
    ========================================= */
 .header {
     position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
-    z-index: 100; transition: background 0.4s ease, backdrop-filter 0.4s ease;
+    z-index: 100; transition: all 0.4s ease;
 }
-.header.is-scrolled { background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+/* Жидкое стекло при скролле (Header) */
+.header.is-scrolled {
+    background: rgba(5, 5, 5, 0.7);
+    backdrop-filter: blur(30px) saturate(160%);
+    -webkit-backdrop-filter: blur(30px) saturate(160%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
 
 .container { width: 90%; max-width: var(--container-width); margin: 0 auto; }
 .header-inner { height: 100%; display: flex; justify-content: space-between; align-items: center; }
@@ -185,6 +210,7 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .header-right { display: flex; align-items: center; gap: 30px; z-index: 105; }
 .btn-text { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255, 255, 255, 0.3); padding-bottom: 2px; }
 .btn-text:hover { color: var(--accent); border-color: var(--accent); }
+
 .burger-trigger { width: 30px; height: 14px; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; }
 .burger-trigger .line { display: block; width: 100%; height: 1px; background-color: white; transition: 0.4s; }
 .burger-trigger.active .line:nth-child(1) { transform: translateY(6px) rotate(45deg); }
@@ -210,10 +236,10 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
    ========================================= */
 .hero { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-.hero-bg img { width: 100%; height: 100%; object-fit: cover; }
+.hero-bg img, .hero-bg video { width: 100%; height: 100%; object-fit: cover; }
 .hero-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(5,5,5,1));
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(3,3,3,1));
     z-index: 2;
 }
 .hero-container { position: relative; z-index: 3; text-align: center; }
@@ -275,7 +301,6 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .scenarios-section { padding: 120px 0; background-color: #080808; position: relative; z-index: 2; }
 .horizontal-scroll-wrapper { width: 100%; position: relative; display: flex; justify-content: center; }
 
-/* Трек карусели */
 .horizontal-track { 
     display: flex; gap: 40px; 
     overflow-x: auto;
@@ -287,7 +312,6 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 }
 .horizontal-track::-webkit-scrollbar { display: none; }
 
-/* Карточка */
 .scenario-card {
     width: 400px; height: 600px; position: relative; flex-shrink: 0;
     overflow: hidden; border-radius: 4px; background-color: #000;
@@ -295,7 +319,6 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     scroll-snap-align: center;
 }
 
-/* Картинка */
 .card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 .scenario-card .card-bg img {
     width: 100%; height: 100%; object-fit: cover;
@@ -304,7 +327,6 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 }
 .scenario-card:hover .card-bg img { transform: scale(1.05); filter: brightness(0.5); }
 
-/* Контент */
 .card-content {
     position: absolute; bottom: 0; left: 0; width: 100%; z-index: 10;
     padding: 40px 30px; display: flex; flex-direction: column; justify-content: flex-end;
@@ -313,7 +335,6 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 }
 .card-content.center { height: 100%; justify-content: center; align-items: center; text-align: center; background: rgba(0,0,0,0.6); }
 
-/* Тексты на карточке */
 .card-num { font-family: var(--font-display); font-size: 4rem; color: rgba(255,255,255,0.1); position: absolute; top: 20px; right: 20px; z-index: 5; }
 .card-title { font-size: 2rem; margin-bottom: 10px; color: #fff; z-index: 11; }
 .card-desc { 
@@ -326,7 +347,6 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     display: inline-block; width: fit-content; z-index: 11;
 }
 
-/* Кнопки Навигации (Стрелки) */
 .nav-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
     width: 60px; height: 60px; border-radius: 50%;
@@ -341,19 +361,36 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .nav-arrow.next { right: 30px; }
 
 /* =========================================
-   10. TARIFFS
+   10. TARIFFS (Liquid Glass Cards)
    ========================================= */
 .tariffs-section { padding: 150px 0; position: relative; z-index: 2; }
 .section-header-row { margin-bottom: 80px; text-align: center; }
 .tariffs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+
+/* Эффект левитирующего стекла */
 .tariff-item {
-    background: var(--glass-bg); border: 1px solid var(--glass-border);
-    backdrop-filter: blur(var(--glass-blur)); padding: 50px 30px; border-radius: 8px;
-    position: relative; transition: 0.3s; display: flex; flex-direction: column;
+    background: linear-gradient(145deg, rgba(30,30,30,0.4) 0%, rgba(20,20,20,0.2) 100%);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.1), 0 20px 40px rgba(0,0,0,0.3);
+    border-radius: 20px;
+    
+    padding: 50px 30px;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s;
+    display: flex; flex-direction: column; position: relative;
 }
-.tariff-item:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateY(-10px); }
-.tariff-item.featured { border-color: var(--accent); background: rgba(212, 175, 55, 0.03); }
-.t-head { text-align: center; margin-bottom: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 30px; }
+
+.tariff-item:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.2), 0 30px 60px rgba(0,0,0,0.5);
+}
+
+.tariff-item.featured { border-color: var(--accent); background: linear-gradient(145deg, rgba(212, 175, 55, 0.05) 0%, rgba(20,20,20,0.3) 100%); }
+
+.t-head { text-align: center; margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 30px; }
 .t-head h3 { font-size: 1.5rem; margin-bottom: 10px; }
 .t-head .price { font-family: var(--font-display); font-size: 2.2rem; color: var(--accent); }
 .t-features { margin-bottom: 40px; flex-grow: 1; }
@@ -364,17 +401,24 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .btn-primary.full:hover { background: white; }
 
 /* =========================================
-   11. FORM
+   11. FORM (Deep Glass)
    ========================================= */
 .contact-section { padding: 100px 0 150px 0; }
 .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
 .socials-row { display: flex; gap: 30px; margin-top: 30px; }
 .soc-link { font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px; }
 
+/* Форма с максимальной глубиной */
 .booking-form {
-    background: rgba(20, 20, 20, 0.4); backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border); padding: 50px; border-radius: 4px;
+    background: rgba(15, 15, 15, 0.4);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.1), 0 20px 50px rgba(0,0,0,0.4);
+    border-radius: 24px;
+    padding: 60px;
 }
+
 .input-group { position: relative; margin-bottom: 40px; }
 .input-group input, .input-group select {
     width: 100%; background: transparent !important; border: none; border-bottom: 1px solid #444;
