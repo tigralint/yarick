@@ -28,6 +28,18 @@
     cursor: none; /* Скрываем системный курсор для кастомного */
 }
 
+/* Стилизация выделения текста (Premium feel) */
+::selection {
+    background-color: var(--accent);
+    color: #000;
+}
+
+/* Кастомный скроллбар */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-color); }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
 html.lenis { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto; }
 
@@ -36,12 +48,15 @@ body {
     color: var(--text-main);
     font-family: var(--font-body);
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.7;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-a { text-decoration: none; color: inherit; transition: color 0.3s ease; }
+a { text-decoration: none; color: inherit; transition: color 0.3s ease; cursor: none; }
+button, input, select, textarea { cursor: none; }
+
 ul { list-style: none; }
 img, video { display: block; max-width: 100%; height: auto; }
 
@@ -92,7 +107,7 @@ h1, h2, h3, h4 {
 }
 
 /* =========================================
-   3. AMBIENT GLOWS (ФОН)
+   3. AMBIENT GLOWS
    ========================================= */
 .ambient-glow {
     position: fixed;
@@ -152,9 +167,10 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
    ========================================= */
 .header {
     position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
-    z-index: 100; transition: background 0.4s ease;
+    z-index: 100; transition: background 0.4s ease, backdrop-filter 0.4s ease;
 }
-.header.is-scrolled { background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(10px); }
+.header.is-scrolled { background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+
 .container { width: 90%; max-width: var(--container-width); margin: 0 auto; }
 .header-inner { height: 100%; display: flex; justify-content: space-between; align-items: center; }
 .logo { font-family: var(--font-display); font-size: 1.8rem; font-weight: 600; letter-spacing: 0.05em; z-index: 105; }
@@ -245,16 +261,16 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .concept-section { padding: 150px 0; position: relative; }
 .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
 .text-body { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 3rem; max-width: 500px; }
-.concept-list li { display: flex; align-items: flex-start; padding: 20px 0; border-top: 1px solid var(--glass-border); }
+.concept-list li { display: flex; align-items: flex-start; padding: 25px 0; border-top: 1px solid var(--glass-border); }
 .concept-list .num { font-family: var(--font-display); color: var(--accent); margin-right: 30px; font-size: 1.2rem; }
-.concept-list .val { font-size: 1.1rem; font-weight: 500; margin-right: 20px; min-width: 120px; }
-.concept-list .sub { font-size: 0.95rem; color: var(--text-muted); }
-.concept-image-wrapper { position: relative; height: 600px; width: 100%; overflow: hidden; }
+.concept-list .val { font-size: 1.1rem; font-weight: 500; margin-right: 20px; min-width: 120px; color: var(--text-main); }
+.concept-list .sub { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+.concept-image-wrapper { position: relative; height: 600px; width: 100%; overflow: hidden; border-radius: 4px; }
 .reveal-image img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.5s ease; }
 .concept-image-wrapper:hover img { filter: grayscale(0%); }
 
 /* =========================================
-   9. SCENARIOS (КАРУСЕЛЬ + КНОПКИ)
+   9. SCENARIOS
    ========================================= */
 .scenarios-section { padding: 120px 0; background-color: #080808; position: relative; z-index: 2; }
 .horizontal-scroll-wrapper { width: 100%; position: relative; display: flex; justify-content: center; }
@@ -262,13 +278,11 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 /* Трек карусели */
 .horizontal-track { 
     display: flex; gap: 40px; 
-    overflow-x: auto; /* Нативный скролл */
+    overflow-x: auto;
     scroll-behavior: smooth; 
     padding: 20px 10vw 60px 10vw; 
     width: 100%;
-    /* Скрываем скроллбар */
     -ms-overflow-style: none; scrollbar-width: none;
-    /* Snap effect */
     scroll-snap-type: x mandatory;
 }
 .horizontal-track::-webkit-scrollbar { display: none; }
@@ -278,24 +292,24 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     width: 400px; height: 600px; position: relative; flex-shrink: 0;
     overflow: hidden; border-radius: 4px; background-color: #000;
     border: 1px solid var(--glass-border);
-    scroll-snap-align: center; /* Центровка */
+    scroll-snap-align: center;
 }
 
 /* Картинка */
 .card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 .scenario-card .card-bg img {
     width: 100%; height: 100%; object-fit: cover;
-    filter: brightness(0.65); /* Затемнение */
+    filter: brightness(0.65);
     transition: transform 0.6s ease, filter 0.6s ease;
 }
 .scenario-card:hover .card-bg img { transform: scale(1.05); filter: brightness(0.5); }
 
-/* Контент (Абсолютное позиционирование) */
+/* Контент */
 .card-content {
     position: absolute; bottom: 0; left: 0; width: 100%; z-index: 10;
-    padding: 30px; display: flex; flex-direction: column; justify-content: flex-end;
-    /* Градиент снизу, чтобы текст читался всегда */
-    background: linear-gradient(to top, #000 0%, rgba(0,0,0,0.85) 40%, transparent 100%);
+    padding: 40px 30px; display: flex; flex-direction: column; justify-content: flex-end;
+    background: linear-gradient(to top, #000 10%, rgba(0,0,0,0.9) 50%, transparent 100%);
+    min-height: 50%;
 }
 .card-content.center { height: 100%; justify-content: center; align-items: center; text-align: center; background: rgba(0,0,0,0.6); }
 
@@ -303,11 +317,11 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .card-num { font-family: var(--font-display); font-size: 4rem; color: rgba(255,255,255,0.1); position: absolute; top: 20px; right: 20px; z-index: 5; }
 .card-title { font-size: 2rem; margin-bottom: 10px; color: #fff; z-index: 11; }
 .card-desc { 
-    color: #e0e0e0; font-size: 1rem; margin-bottom: 20px; 
-    opacity: 1; z-index: 11; display: block; line-height: 1.5;
+    color: #e0e0e0; font-size: 0.95rem; margin-bottom: 25px; 
+    opacity: 1; z-index: 11; display: block; line-height: 1.6;
 }
 .card-btn { 
-    font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; 
+    font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; 
     border-bottom: 1px solid var(--accent); padding-bottom: 5px; color: var(--accent); 
     display: inline-block; width: fit-content; z-index: 11;
 }
@@ -335,13 +349,14 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
 .tariff-item {
     background: var(--glass-bg); border: 1px solid var(--glass-border);
     backdrop-filter: blur(var(--glass-blur)); padding: 50px 30px; border-radius: 8px;
-    position: relative; transition: 0.3s;
+    position: relative; transition: 0.3s; display: flex; flex-direction: column;
 }
 .tariff-item:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateY(-10px); }
 .tariff-item.featured { border-color: var(--accent); background: rgba(212, 175, 55, 0.03); }
 .t-head { text-align: center; margin-bottom: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 30px; }
 .t-head h3 { font-size: 1.5rem; margin-bottom: 10px; }
 .t-head .price { font-family: var(--font-display); font-size: 2.2rem; color: var(--accent); }
+.t-features { margin-bottom: 40px; flex-grow: 1; }
 .t-features li { margin-bottom: 15px; text-align: center; color: var(--text-muted); font-size: 0.95rem; }
 .t-link { display: block; text-align: center; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: #fff; border: 1px solid var(--glass-border); padding: 15px; transition: 0.3s; }
 .t-link:hover { background: white; color: black; }
@@ -375,6 +390,7 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     background: transparent; border: 1px solid var(--accent); color: var(--accent);
     padding: 20px 40px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.2em;
     cursor: pointer; transition: 0.4s; width: 100%; margin-top: 20px; overflow: hidden;
+    position: relative;
 }
 .btn-submit:hover { background: var(--accent); color: #000; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
 
@@ -401,18 +417,17 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     .concept-grid { grid-template-columns: 1fr; }
     .concept-image-wrapper { height: 400px; order: -1; }
     
-    /* Скрываем стрелки, используем свайп */
     .nav-arrow { display: none; } 
     
     .horizontal-scroll-wrapper {
         height: auto; display: block; overflow-x: auto;
         padding: 0 20px 40px 20px; -webkit-overflow-scrolling: touch;
     }
-    /* Выравнивание карточек слева */
     .horizontal-track { padding: 0; gap: 20px; width: max-content; }
-    .scenario-card { width: 85vw; height: 500px; }
     
-    .card-content { background: linear-gradient(to top, #000 20%, rgba(0,0,0,0.8) 60%, transparent 100%); padding: 25px; }
+    .scenario-card { width: 80vw; height: 500px; }
+    
+    .card-content { background: linear-gradient(to top, #000 20%, rgba(0,0,0,0.8) 70%, transparent 100%); padding: 25px; }
     .card-title { font-size: 1.8rem; }
     
     .tariffs-grid { grid-template-columns: 1fr; }

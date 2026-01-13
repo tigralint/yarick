@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // =================================================================
-    // 2. CUSTOM CURSOR (HIGH PERFORMANCE)
+    // 2. CUSTOM CURSOR (MAGNETIC & HOVER)
     // =================================================================
     const cursorOuter = document.querySelector('.cursor-outer');
     const cursorInner = document.querySelector('.cursor-inner');
@@ -74,55 +74,79 @@ document.addEventListener('DOMContentLoaded', () => {
         setOuterY(outerPos.y);
     });
 
-    // Hover эффекты
-    document.querySelectorAll('[data-cursor]').forEach(el => {
+    // Функция добавления магнитного эффекта
+    const addMagneticEffect = (el) => {
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const relX = e.clientX - rect.left - rect.width / 2;
+            const relY = e.clientY - rect.top - rect.height / 2;
+            gsap.to(el, { x: relX * 0.4, y: relY * 0.4, duration: 0.3 });
+        });
+        
+        el.addEventListener('mouseleave', () => {
+            gsap.to(el, { x: 0, y: 0, duration: 0.4, ease: 'power2.out' });
+        });
+    };
+
+    // Находим все элементы с курсором + добавляем магнетизм ссылкам меню
+    const interactiveElements = document.querySelectorAll('[data-cursor], .nav-link, .nav-arrow');
+
+    interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
-            const type = el.getAttribute('data-cursor');
+            // Определяем тип эффекта: если явно magnetic или это ссылка меню/стрелка -> магнетизм
+            const isMagnetic = el.getAttribute('data-cursor') === '-magnetic' || 
+                               el.classList.contains('nav-link') || 
+                               el.classList.contains('nav-arrow');
+            
             document.body.classList.add('hover-active');
-            if (type === '-magnetic') document.body.classList.add('hover-magnetic');
+            if (isMagnetic) {
+                document.body.classList.add('hover-magnetic');
+                addMagneticEffect(el); // Включаем расчет координат
+            }
         });
 
         el.addEventListener('mouseleave', () => {
             document.body.classList.remove('hover-active');
             document.body.classList.remove('hover-magnetic');
-            gsap.to(el, { x: 0, y: 0, duration: 0.4, ease: 'power2.out' });
         });
-
-        // Магнетизм для кнопок
-        if (el.getAttribute('data-cursor') === '-magnetic') {
-            el.addEventListener('mousemove', (e) => {
-                const rect = el.getBoundingClientRect();
-                const relX = e.clientX - rect.left - rect.width / 2;
-                const relY = e.clientY - rect.top - rect.height / 2;
-                gsap.to(el, { x: relX * 0.4, y: relY * 0.4, duration: 0.3 });
-            });
-        }
     });
 
     // =================================================================
-    // 3. LOADER SEQUENCE
+    // 3. LOADER SEQUENCE (SMART SESSION)
     // =================================================================
     const loader = document.querySelector('.loader');
     const progress = document.querySelector('.loader-progress');
     const curtain = document.querySelector('.loader-curtain');
     
-    document.body.style.overflow = 'hidden';
-    lenis.stop();
+    // Проверяем, был ли пользователь уже здесь в этой сессии
+    const sessionVisited = sessionStorage.getItem('visited');
 
-    const tlLoader = gsap.timeline({
-        onComplete: () => {
-            loader.style.display = 'none';
-            document.body.style.overflow = '';
-            lenis.start();
-            initAnimations(); 
-            ScrollTrigger.refresh();
-        }
-    });
+    if (sessionVisited) {
+        // Если уже был — скрываем лоадер мгновенно
+        loader.style.display = 'none';
+        initAnimations();
+        ScrollTrigger.refresh();
+    } else {
+        // Если первый раз — показываем анимацию
+        document.body.style.overflow = 'hidden';
+        lenis.stop();
 
-    tlLoader
-        .to(progress, { width: '100%', duration: 1.0, ease: 'power2.inOut' })
-        .to('.loader-text', { y: -50, opacity: 0, duration: 0.5, ease: 'power2.in' })
-        .to(curtain, { yPercent: -100, duration: 1, ease: 'power4.inOut' });
+        const tlLoader = gsap.timeline({
+            onComplete: () => {
+                loader.style.display = 'none';
+                document.body.style.overflow = '';
+                lenis.start();
+                initAnimations(); 
+                ScrollTrigger.refresh();
+                sessionStorage.setItem('visited', 'true'); // Запоминаем визит
+            }
+        });
+
+        tlLoader
+            .to(progress, { width: '100%', duration: 1.0, ease: 'power2.inOut' })
+            .to('.loader-text', { y: -50, opacity: 0, duration: 0.5, ease: 'power2.in' })
+            .to(curtain, { yPercent: -100, duration: 1, ease: 'power4.inOut' });
+    }
 
     // =================================================================
     // 4. MAIN ANIMATIONS
@@ -142,11 +166,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // B. TEXT REVEAL
         gsap.utils.toArray('.line-reveal').forEach((line, i) => {
-            gsap.to(line, { y: 0, duration: 1.2, delay: i * 0.1, ease: 'power4.out' });
+            gsap.to(line, { 
+                y: 0, 
+                duration: 1.2, 
+                delay: i * 0.1, 
+                ease: 'power4.out',
+                scrollTrigger: { trigger: '.hero', start: "top 60%" } // Триггер для уверенности
+            });
         });
-        gsap.to('.hero-label', { opacity: 1, duration: 1, delay: 0.5 });
-        gsap.to('.hero-desc', { opacity: 1, duration: 1, delay: 0.8 });
-        gsap.to('.hero-action', { opacity: 1, duration: 1, delay: 1 });
+        
+        const heroElements = ['.hero-label', '.hero-desc', '.hero-action'];
+        gsap.to(heroElements, { 
+            opacity: 1, 
+            duration: 1, 
+            stagger: 0.2, 
+            delay: 0.5,
+            scrollTrigger: { trigger: '.hero', start: "top 60%" }
+        });
 
         // C. IMAGE REVEAL (При скролле)
         gsap.utils.toArray('.reveal-image img').forEach(img => {
@@ -184,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (track && btnPrev && btnNext) {
         const getScrollAmount = () => {
-            // Скроллим на ширину первой карточки + отступ (или 440px как фоллбек)
             const card = track.querySelector('.scenario-card');
             return card ? card.offsetWidth + 40 : 440;
         };
@@ -199,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =================================================================
-    // 6. MENU & FORM
+    // 6. MENU & FORM HANDLING
     // =================================================================
     const burgerTrigger = document.querySelector('.burger-trigger');
     const mobileMenu = document.querySelector('.mobile-menu');
@@ -225,28 +260,65 @@ document.addEventListener('DOMContentLoaded', () => {
     burgerTrigger.addEventListener('click', toggleMenu);
     mobileLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
 
-    // Form Handling
+    // Form Handling (AJAX + Animation)
     const form = document.querySelector('.booking-form');
     const submitBtn = document.querySelector('.btn-submit span');
+    const submitBtnContainer = document.querySelector('.btn-submit');
 
     if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = 'Отправка...';
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Останавливаем стандартную перезагрузку
             
-            setTimeout(() => {
+            // Сохраняем исходный текст
+            const originalText = submitBtn.innerText;
+            
+            // UI: Состояние отправки
+            submitBtn.innerText = 'Отправка...';
+            submitBtnContainer.style.opacity = '0.7';
+
+            // Собираем данные
+            const formData = new FormData(form);
+            const action = form.getAttribute('action');
+
+            try {
+                // Если action задан и не является заглушкой, пробуем отправить
+                if (action && !action.includes('YOUR_ID_HERE')) {
+                    const response = await fetch(action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (!response.ok) throw new Error('Network error');
+                } else {
+                    // Имитация задержки, если бэкенда нет
+                    await new Promise(r => setTimeout(r, 1500));
+                }
+
+                // UI: Успех
                 submitBtn.innerText = 'Заявка принята';
-                submitBtn.parentElement.style.borderColor = '#D4AF37';
-                submitBtn.parentElement.style.background = 'rgba(212, 175, 55, 0.1)';
+                submitBtnContainer.style.opacity = '1';
+                submitBtnContainer.style.borderColor = '#D4AF37';
+                submitBtnContainer.style.background = 'rgba(212, 175, 55, 0.1)';
                 form.reset();
 
+                // Возврат к исходному состоянию через 3 сек
                 setTimeout(() => {
                     submitBtn.innerText = originalText;
-                    submitBtn.parentElement.style.borderColor = '';
-                    submitBtn.parentElement.style.background = '';
+                    submitBtnContainer.style.borderColor = '';
+                    submitBtnContainer.style.background = '';
                 }, 3000);
-            }, 1500);
+
+            } catch (error) {
+                // UI: Ошибка
+                submitBtn.innerText = 'Ошибка. Попробуйте снова';
+                setTimeout(() => {
+                    submitBtn.innerText = originalText;
+                    submitBtnContainer.style.opacity = '1';
+                }, 3000);
+            }
         });
     }
 
