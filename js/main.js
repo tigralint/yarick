@@ -4,15 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.registerPlugin(ScrollTrigger);
 
     // =================================================================
-    // 1. SMOOTH SCROLL (LENIS) - FINAL SETUP
+    // 1. SMOOTH SCROLL (LENIS) - OPTIMIZED SETUP
     // =================================================================
     const lenis = new Lenis({
-        duration: 1.5,
+        duration: 1.2, // Оптимизировано: чуть быстрее для отзывчивости (было 1.5)
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 0.9,
+        wheelMultiplier: 1,
         touchMultiplier: 2,
     });
 
@@ -27,7 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.ticker.add((time) => {
         lenis.raf(time * 1000);
     });
-    gsap.ticker.lagSmoothing(0);
+
+    // [ВАЖНО] ИСПРАВЛЕНИЕ ДЁРГАНОСТИ
+    // Было: gsap.ticker.lagSmoothing(0); -> Это вызывало рывки при нагрузке.
+    // Стало: Стандартная настройка. GSAP скорректирует анимацию, если FPS просядет.
+    gsap.ticker.lagSmoothing(1000, 16);
 
     // --- ПЛАВНЫЙ СКРОЛЛ ПО ЯКОРЯМ ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -50,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cursorOuter = document.querySelector('.cursor-outer');
     const cursorInner = document.querySelector('.cursor-inner');
     
-    // Используем quickSetter для скорости
+    // Используем quickSetter для высокой производительности
     const setOuterX = gsap.quickSetter(cursorOuter, "x", "px");
     const setOuterY = gsap.quickSetter(cursorOuter, "y", "px");
     const setInnerX = gsap.quickSetter(cursorInner, "x", "px");
@@ -62,14 +66,19 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('mousemove', (e) => {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
+        
+        // Внутренняя точка движется мгновенно
         setInnerX(mouse.x);
         setInnerY(mouse.y);
     });
 
+    // Внешний круг движется с плавным отставанием (Lerp)
     gsap.ticker.add((dt) => {
-        const speed = 1.0 - Math.pow(0.75, dt);
+        const speed = 1.0 - Math.pow(0.75, dt); // Адаптивная скорость
+        
         outerPos.x += (mouse.x - outerPos.x) * 0.25; 
         outerPos.y += (mouse.y - outerPos.y) * 0.25;
+        
         setOuterX(outerPos.x);
         setOuterY(outerPos.y);
     });
@@ -93,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
-            // Определяем тип эффекта: если явно magnetic или это ссылка меню/стрелка -> магнетизм
+            // Определяем тип эффекта
             const isMagnetic = el.getAttribute('data-cursor') === '-magnetic' || 
                                el.classList.contains('nav-link') || 
                                el.classList.contains('nav-arrow');
@@ -101,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('hover-active');
             if (isMagnetic) {
                 document.body.classList.add('hover-magnetic');
-                addMagneticEffect(el); // Включаем расчет координат
+                addMagneticEffect(el);
             }
         });
 
@@ -156,11 +165,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // A. HERO PARALLAX (Мышка)
         const heroSection = document.querySelector('.hero');
         const heroBg = document.querySelector('.hero-bg img');
-        if (heroSection && heroBg) {
+        // Добавлена проверка на видео, так как у вас может быть video вместо img
+        const heroMedia = document.querySelector('.hero-bg img') || document.querySelector('.hero-bg video');
+        
+        if (heroSection && heroMedia) {
             heroSection.addEventListener('mousemove', (e) => {
                 const xPos = (e.clientX / window.innerWidth - 0.5) * 20;
                 const yPos = (e.clientY / window.innerHeight - 0.5) * 20;
-                gsap.to(heroBg, { x: xPos, y: yPos, duration: 1, ease: 'power2.out' });
+                gsap.to(heroMedia, { x: xPos, y: yPos, duration: 1, ease: 'power2.out' });
             });
         }
 
@@ -171,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 duration: 1.2, 
                 delay: i * 0.1, 
                 ease: 'power4.out',
-                scrollTrigger: { trigger: '.hero', start: "top 60%" } // Триггер для уверенности
+                scrollTrigger: { trigger: '.hero', start: "top 60%" }
             });
         });
         
@@ -267,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (form) {
         form.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Останавливаем стандартную перезагрузку
+            e.preventDefault(); 
             
             // Сохраняем исходный текст
             const originalText = submitBtn.innerText;
@@ -281,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const action = form.getAttribute('action');
 
             try {
-                // Если action задан и не является заглушкой, пробуем отправить
+                // Если action задан и не является заглушкой
                 if (action && !action.includes('YOUR_ID_HERE')) {
                     const response = await fetch(action, {
                         method: 'POST',
@@ -293,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     if (!response.ok) throw new Error('Network error');
                 } else {
-                    // Имитация задержки, если бэкенда нет
+                    // Имитация
                     await new Promise(r => setTimeout(r, 1500));
                 }
 
@@ -304,7 +316,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtnContainer.style.background = 'rgba(212, 175, 55, 0.1)';
                 form.reset();
 
-                // Возврат к исходному состоянию через 3 сек
                 setTimeout(() => {
                     submitBtn.innerText = originalText;
                     submitBtnContainer.style.borderColor = '';

@@ -41,11 +41,11 @@
     color: #000;
 }
 
-/* Кастомный скроллбар */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-color); }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+/* [ОПТИМИЗАЦИЯ] Скрываем нативный скроллбар, чтобы не конфликтовал с Lenis */
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}
 
 html.lenis { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto; }
@@ -152,7 +152,11 @@ p {
     position: fixed; top: 0; left: 0; width: 40px; height: 40px;
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 50%; pointer-events: none; z-index: 9999;
-    transform: translate(-50%, -50%);
+    /* [ОПТИМИЗАЦИЯ] Принудительное GPU-ускорение */
+    will-change: transform;
+    transform: translate3d(0, 0, 0); 
+    backface-visibility: hidden;
+    
     mix-blend-mode: difference;
     transition: width 0.3s, height 0.3s, background-color 0.3s;
 }
@@ -160,8 +164,12 @@ p {
     position: fixed; top: 0; left: 0; width: 6px; height: 6px;
     background-color: var(--accent);
     border-radius: 50%; pointer-events: none; z-index: 9999;
-    transform: translate(-50%, -50%);
+    /* [ОПТИМИЗАЦИЯ] Принудительное GPU-ускорение */
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
 }
+
 body.hover-active .cursor-outer { width: 80px; height: 80px; border-color: var(--accent); background: rgba(212, 175, 55, 0.05); }
 body.hover-magnetic .cursor-outer { opacity: 0; }
 body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: transparent; border: 1px solid var(--accent); }
@@ -194,6 +202,9 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     -webkit-backdrop-filter: blur(30px) saturate(160%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    
+    /* [ОПТИМИЗАЦИЯ] Ускорение рендера блюра */
+    will-change: transform, backdrop-filter;
 }
 
 .container { width: 90%; max-width: var(--container-width); margin: 0 auto; }
@@ -380,6 +391,9 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     padding: 50px 30px;
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s;
     display: flex; flex-direction: column; position: relative;
+    
+    /* [ОПТИМИЗАЦИЯ] Ускорение рендера */
+    will-change: transform, backdrop-filter;
 }
 
 .tariff-item:hover {
@@ -417,6 +431,9 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.1), 0 20px 50px rgba(0,0,0,0.4);
     border-radius: 24px;
     padding: 60px;
+    
+    /* [ОПТИМИЗАЦИЯ] Ускорение рендера */
+    will-change: transform, backdrop-filter;
 }
 
 .input-group { position: relative; margin-bottom: 40px; }
@@ -478,6 +495,7 @@ body.hover-magnetic .cursor-inner { width: 40px; height: 40px; background: trans
     .contact-wrapper { grid-template-columns: 1fr; }
     .booking-form { padding: 30px 20px; }
     
+    /* Отключаем кастомный курсор на таче */
     .cursor-outer, .cursor-inner { display: none; }
     *, *::before, *::after { cursor: auto; }
 }
